@@ -19,6 +19,7 @@
 - 360 / 390 / 768 / 1024 / 1440px에서 네 화면 모두 가로 넘침 없음
 - 실제 Supabase Google OAuth 요청의 302 응답, Google 인증 화면으로의 이동, PKCE S256, 앱 콜백 주소 확인
 - 브라우저 JavaScript 오류 없음
+- `/money/` 경로를 사용한 프로덕션 빌드에서도 네 화면, 정적 콜백 직접 접속, 로그인 취소 후 복귀, PKCE 콜백 경로 확인
 
 ## 실제 데이터베이스 검사
 
@@ -33,3 +34,5 @@
 ## 인증 검증 범위
 
 Google 계정 선택과 사용자 동의는 실제 사용자가 직접 완료해야 합니다. 자동 검증에서는 Google로 이동하기 직전까지의 OAuth 요청과 데이터베이스 접근 규칙을 확인했습니다. 새 배포 도메인의 콜백은 Supabase Redirect URLs에 허용되어 있어야 합니다.
+
+현재 연결된 도구는 Vercel 프로젝트 생성과 GitHub Pages 활성화를 모두 권한 오류(403)로 거부했습니다. GitHub Pages 배포 워크플로는 준비되어 있으며, 저장소 Settings → Pages에서 Source를 GitHub Actions로 선택해야 배포를 완료할 수 있습니다. Supabase Redirect URLs에는 `https://k435760-cyber.github.io/money/auth/callback/`를 추가해야 합니다. 허용되지 않은 주소는 기존 프로젝트의 Site URL로 돌아가는 것을 확인했습니다.

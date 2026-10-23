@@ -25,7 +25,7 @@ export function useLedger() {
       new URLSearchParams(url.hash.slice(1)).has("error_description")
     ) {
       setError("Google 로그인이 완료되지 않았어요. 다시 시도해주세요.");
-      history.replaceState(null, "", "/");
+      history.replaceState(null, "", import.meta.env.BASE_URL);
     }
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -34,10 +34,11 @@ export function useLedger() {
         setAuthReady(true);
         if (
           session &&
-          (window.location.pathname === "/auth/callback" ||
+          (window.location.pathname.replace(/\/$/, "") ===
+            `${import.meta.env.BASE_URL}auth/callback` ||
             url.searchParams.has("code"))
         )
-          history.replaceState(null, "", "/");
+          history.replaceState(null, "", import.meta.env.BASE_URL);
       },
     );
     void supabase.auth
@@ -46,7 +47,7 @@ export function useLedger() {
         if (!alive) return;
         if (authError) {
           setError("로그인 정보를 확인하지 못했어요. 다시 로그인해주세요.");
-          history.replaceState(null, "", "/");
+          history.replaceState(null, "", import.meta.env.BASE_URL);
         }
         setUser(data.session?.user ?? null);
         setAuthReady(true);

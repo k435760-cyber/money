@@ -23,7 +23,10 @@ export async function signInWithGoogle() {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: new URL(
+        `${import.meta.env.BASE_URL}auth/callback/`,
+        window.location.origin,
+      ).href,
       queryParams: { prompt: "select_account" },
     },
   });

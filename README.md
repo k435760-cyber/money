@@ -56,13 +56,24 @@ VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_your_key
 1. Google Cloud에서 웹 애플리케이션 OAuth 클라이언트를 만들고, 승인된 리디렉션 URI에 `https://<project-ref>.supabase.co/auth/v1/callback`을 등록합니다.
 2. Supabase → Authentication → Sign In / Providers → Google에 Client ID와 Client Secret을 설정합니다. **Client Secret은 Supabase에만 저장합니다.**
 3. Supabase → Authentication → URL Configuration → Redirect URLs에 다음을 추가합니다.
-   - `http://localhost:5173/auth/callback`
-   - `https://<배포 도메인>/auth/callback`
+   - `http://localhost:5173/auth/callback/`
+   - `https://<배포 도메인>/auth/callback/`
+   - GitHub Pages에서는 `https://k435760-cyber.github.io/money/auth/callback/`
 4. Google의 OAuth 동의 화면이 테스트 상태라면 실제로 사용할 계정을 테스트 사용자에 추가합니다.
 
 기존 앱과 Supabase 프로젝트를 함께 사용한다면 기존 Site URL을 바꾸지 말고, 한푼의 콜백 주소를 Redirect URLs 목록에 추가하세요. 인증은 PKCE S256을 사용하며, 로그인 콜백의 코드 교환과 세션 갱신은 Supabase SDK가 처리합니다.
 
 ## 배포
+
+### GitHub Pages
+
+[Pages 설정](https://github.com/k435760-cyber/money/settings/pages)에서 Source를 **GitHub Actions**로 선택하세요. 이후 `main`에 push하거나 [Actions](https://github.com/k435760-cyber/money/actions)의 `Verify and deploy Hanpun`을 실행하면 테스트와 빌드를 거쳐 배포됩니다.
+
+배포 후 주소: `https://k435760-cyber.github.io/money/`
+
+워크플로가 `VITE_BASE_PATH=/money/`를 설정합니다. 정적 호스트용 `auth/callback/index.html`도 빌드 시 생성하므로 Google 로그인 콜백 주소를 직접 열 수 있습니다. Supabase Redirect URLs에는 `https://k435760-cyber.github.io/money/auth/callback/`를 추가하세요. 기존 Site URL은 변경할 필요가 없습니다.
+
+### Vercel
 
 Vercel에서 이 GitHub 저장소를 가져오면 Vite 설정을 자동으로 사용합니다. `vercel.json`에는 빌드 명령, 보안 응답 헤더, `/auth/callback`을 포함한 SPA 라우팅 설정이 있습니다.
 
