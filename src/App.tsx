@@ -39,6 +39,12 @@ import { AuthModal } from "./components/AuthModal";
 import { TransactionList } from "./components/Transactions";
 import { Dashboard } from "./pages/Dashboard";
 
+const Assistant = lazy(() =>
+  import("./components/Assistant").then((module) => ({
+    default: module.Assistant,
+  })),
+);
+
 const Ledger = lazy(() =>
   import("./pages/Ledger").then((module) => ({ default: module.Ledger })),
 );
@@ -67,6 +73,7 @@ export default function App() {
   } | null>(null);
   const [planEditor, setPlanEditor] = useState<"budget" | "note" | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
+  const [assistantOpen, setAssistantOpen] = useState(false);
   const [day, setDay] = useState<string | null>(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -209,6 +216,20 @@ export default function App() {
           </div>
           <span className="topbar-label">YOUR EVERYDAY, WELL SPENT.</span>
           <div className="topbar-right">
+            <button
+              className="assistant-launch"
+              disabled={!ledger.ready}
+              onClick={() => setAssistantOpen(true)}
+              aria-label="소비 도우미 열기"
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}ai-icon.png`}
+                alt=""
+                width="25"
+                height="25"
+              />
+              <span>소비 도우미</span>
+            </button>
             <button className="mode-badge" onClick={() => setAuthOpen(true)}>
               <span className="tiny-dot" />
               {isDemo ? "이 기기 가계부" : "나의 가계부"}
@@ -371,6 +392,25 @@ export default function App() {
           </footer>
         </main>
       </div>
+      {assistantOpen && (
+        <Suspense
+          fallback={
+            <Modal title="소비 도우미" onClose={() => setAssistantOpen(false)}>
+              <p role="status">도우미를 불러오고 있어요.</p>
+            </Modal>
+          }
+        >
+          <Assistant
+            key={ledger.user?.id || "guest"}
+            book={ledger.book}
+            month={month}
+            isDemo={isDemo}
+            onSave={(input) => saveEntry(input)}
+            onBudget={() => setPlanEditor("budget")}
+            onClose={() => setAssistantOpen(false)}
+          />
+        </Suspense>
+      )}
       {editor && (
         <EntryForm
           key={editor.entry?.id || editor.date}
@@ -475,6 +515,15 @@ export default function App() {
               로그인 세션과 이 기기의 기록을 브라우저 저장 공간에 보관해요. 이
               기기의 기록은 계정으로 자동 전송되지 않으며, 브라우저 데이터를
               지우면 사라질 수 있어요.
+            </p>
+            <h3>소비 도우미와 사진 분석</h3>
+            <p>
+              도우미를 실행하면 질문, 선택한 달의 가계부 요약과 최근 기록의
+              날짜·내용·금액, 첨부한 이미지를 Google Gemini에 보내 분석해요.
+              계정 이메일과 기록 메모는 요약에 포함하지 않아요. 사진과 대화는
+              한푼 서버에 저장하지 않으며, 분석된 기록은 본인이 확인하고 저장한
+              뒤 가계부에 반영돼요. 이용량 관리에는 계정 식별자 또는 복원할 수
+              없는 IP 해시와 요청 횟수를 최대 3일 보관해요.
             </p>
             <h3>보관과 삭제</h3>
             <p>

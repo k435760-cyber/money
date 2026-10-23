@@ -19,6 +19,7 @@ import { Modal } from "./Modal";
 
 export function EntryForm({
   entry,
+  initialInput,
   date,
   isDemo,
   onSave,
@@ -26,6 +27,7 @@ export function EntryForm({
   onClose,
 }: {
   entry?: Transaction;
+  initialInput?: EntryInput;
   date?: string;
   isDemo: boolean;
   onSave: (input: EntryInput, id?: string) => Promise<void>;
@@ -33,15 +35,16 @@ export function EntryForm({
   onClose: () => void;
 }) {
   const [input, setInput] = useState<EntryInput>(
-    entry ?? {
-      date: date ?? localDate(),
-      title: "",
-      amount: 0,
-      kind: "expense",
-      category: "food",
-      payment: "체크카드",
-      memo: "",
-    },
+    entry ??
+      initialInput ?? {
+        date: date ?? localDate(),
+        title: "",
+        amount: 0,
+        kind: "expense",
+        category: "food",
+        payment: "체크카드",
+        memo: "",
+      },
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
