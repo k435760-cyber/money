@@ -18,6 +18,7 @@ export function AuthModal({
   onPrivacy: () => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
   const [error, setError] = useState("");
   async function login() {
     setBusy(true);
@@ -30,6 +31,8 @@ export function AuthModal({
     }
   }
   async function logout() {
+    if (!confirmLogout || busy) return;
+    setError("");
     setBusy(true);
     try {
       await onSignOut();
@@ -65,10 +68,37 @@ export function AuthModal({
               {error}
             </p>
           )}
-          <button className="button secondary" disabled={busy} onClick={logout}>
-            <LogOut size={16} />
-            {busy ? "로그아웃 중…" : "로그아웃"}
-          </button>
+          {confirmLogout ? (
+            <div className="delete-confirm">
+              <p>로그아웃하시겠어요?</p>
+              <div>
+                <button
+                  className="button secondary"
+                  disabled={busy}
+                  autoFocus
+                  onClick={() => setConfirmLogout(false)}
+                >
+                  취소
+                </button>
+                <button
+                  className="button primary"
+                  disabled={busy}
+                  onClick={logout}
+                >
+                  <LogOut size={16} />
+                  {busy ? "로그아웃 중…" : "로그아웃"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="button secondary"
+              onClick={() => setConfirmLogout(true)}
+            >
+              <LogOut size={16} />
+              로그아웃
+            </button>
+          )}
         </div>
       ) : (
         <div className="auth-content">
