@@ -3561,3 +3561,10 @@ select:focus {
     scroll-behavior: auto !important;
   }
 }
+
+.summary-spending .hero-amount.hero-empty {
+  font-size: clamp(19px, 2.5vw, 28px);
+  line-height: 1.6;
+  letter-spacing: -0.04em;
+  white-space: normal;
+}

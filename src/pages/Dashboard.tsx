@@ -85,32 +85,40 @@ export function Dashboard({
             <span className="tiny-dot" />
             이번 달 쓴 돈
           </span>
-          <div className="hero-amount">
-            {money(expense)}
-            <span>원</span>
-          </div>
-          <p className="comparison">
-            {previousAmount ? (
-              <>
-                <span className={difference <= 0 ? "comparison-good" : ""}>
-                  {difference <= 0 ? (
-                    <ArrowDownLeft size={14} />
-                  ) : (
-                    <ArrowUpRight size={14} />
-                  )}
-                  {money(Math.abs(difference))}원{" "}
-                  {difference <= 0 ? "덜 썼어요" : "더 썼어요"}
-                </span>
-                <small>
-                  {month === currentMonth()
-                    ? "지난달 같은 날보다"
-                    : "지난달보다"}
-                </small>
-              </>
+          <div className={`hero-amount${expense === 0 ? " hero-empty" : ""}`}>
+            {expense === 0 ? (
+              "아직 지출 내역이 없습니다."
             ) : (
-              <span>나의 소비를 알아가는 중이에요.</span>
+              <>
+                {money(expense)}
+                <span>원</span>
+              </>
             )}
-          </p>
+          </div>
+          {expense > 0 && (
+            <p className="comparison">
+              {previousAmount ? (
+                <>
+                  <span className={difference <= 0 ? "comparison-good" : ""}>
+                    {difference <= 0 ? (
+                      <ArrowDownLeft size={14} />
+                    ) : (
+                      <ArrowUpRight size={14} />
+                    )}
+                    {money(Math.abs(difference))}원{" "}
+                    {difference <= 0 ? "덜 썼어요" : "더 썼어요"}
+                  </span>
+                  <small>
+                    {month === currentMonth()
+                      ? "지난달 같은 날보다"
+                      : "지난달보다"}
+                  </small>
+                </>
+              ) : (
+                <span>나의 소비를 알아가는 중이에요.</span>
+              )}
+            </p>
+          )}
         </div>
         <div className="summary-details">
           <div>
