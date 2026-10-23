@@ -1,6 +1,10 @@
 import { useEffect, useId, useRef } from "react";
+import { createPortal } from "react-dom";
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
+
+let openModals = 0;
+let previousOverflow = "";
 
 export function Modal({
   title,
@@ -22,20 +26,23 @@ export function Modal({
   useEffect(() => {
     const dialog = ref.current!;
     dialog.showModal();
-    const original = document.body.style.overflow;
+    if (openModals === 0) previousOverflow = document.body.style.overflow;
+    openModals++;
     document.body.style.overflow = "hidden";
     return () => {
       dialog.close();
-      document.body.style.overflow = original;
+      openModals--;
+      if (openModals === 0) document.body.style.overflow = previousOverflow;
     };
   }, []);
-  return (
+  return createPortal(
     <dialog
       ref={ref}
       className={`modal ${className}`}
       aria-labelledby={titleId}
       onCancel={(event) => {
         event.preventDefault();
+        event.stopPropagation();
         if (!busy) onClose();
       }}
       onClick={(event) => {
@@ -60,6 +67,7 @@ export function Modal({
         </header>
         {children}
       </div>
-    </dialog>
+    </dialog>,
+    document.body,
   );
 }

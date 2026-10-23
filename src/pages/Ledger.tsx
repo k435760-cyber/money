@@ -1,3 +1,4 @@
+import { ChoicePicker } from "../components/Pickers";
 import { useDeferredValue, useState } from "react";
 import {
   ArrowLeft,
@@ -140,34 +141,33 @@ export function Ledger({
               placeholder="내용이나 메모 검색"
             />
           </div>
-          <select
-            aria-label="카테고리 필터"
+          <ChoicePicker
+            label="카테고리 필터"
             value={category}
-            onChange={(event) => {
-              setCategory(event.target.value);
+            options={[
+              { value: "all", label: "모든 카테고리" },
+              ...Object.entries(categories).map(([value, category]) => ({
+                value,
+                label: category.label,
+              })),
+            ]}
+            onChange={(value) => {
+              setCategory(value);
               setPage(1);
             }}
-          >
-            <option value="all">모든 카테고리</option>
-            {Object.entries(categories).map(([key, value]) => (
-              <option key={key} value={key}>
-                {value.label}
-              </option>
-            ))}
-          </select>
-          <select
-            aria-label="결제 수단 필터"
+          />
+          <ChoicePicker
+            label="결제 수단 필터"
             value={payment}
-            onChange={(event) => {
-              setPayment(event.target.value);
+            options={[
+              { value: "all", label: "모든 결제 수단" },
+              ...payments.map((value) => ({ value, label: value })),
+            ]}
+            onChange={(value) => {
+              setPayment(value);
               setPage(1);
             }}
-          >
-            <option value="all">모든 결제 수단</option>
-            {payments.map((value) => (
-              <option key={value}>{value}</option>
-            ))}
-          </select>
+          />
           {hasFilters && (
             <button className="text-button reset-filter" onClick={reset}>
               <X size={14} />

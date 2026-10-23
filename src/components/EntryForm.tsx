@@ -14,6 +14,7 @@ import {
 import type { EntryInput, Kind, Transaction } from "../lib/book";
 import { friendlyError } from "../lib/repository";
 import { CategoryIcon } from "./Icons";
+import { ChoicePicker, DatePicker } from "./Pickers";
 import { Modal } from "./Modal";
 
 export function EntryForm({
@@ -87,7 +88,7 @@ export function EntryForm({
       onClose={onClose}
       busy={busy}
     >
-      <form onSubmit={submit} className="entry-form">
+      <form onSubmit={submit} className="entry-form" noValidate>
         <fieldset disabled={busy} className="form-fields">
           <div
             className="segmented kind-toggle"
@@ -147,17 +148,13 @@ export function EntryForm({
                 required
               />
             </label>
-            <label className="form-label">
-              날짜
-              <input
-                type="date"
-                min="1900-01-01"
-                max="2100-12-31"
+            <div className="form-label">
+              <span>날짜</span>
+              <DatePicker
                 value={input.date}
-                onChange={(event) => update("date", event.target.value)}
-                required
+                onChange={(value) => update("date", value)}
               />
-            </label>
+            </div>
           </div>
           <fieldset className="category-field">
             <legend>카테고리</legend>
@@ -179,19 +176,17 @@ export function EntryForm({
               ))}
             </div>
           </fieldset>
-          <label className="form-label">
-            결제 수단
-            <select
+          <div className="form-label">
+            <span>결제 수단</span>
+            <ChoicePicker
+              label="결제 수단"
               value={input.payment}
-              onChange={(event) =>
-                update("payment", event.target.value as EntryInput["payment"])
+              options={payments.map((value) => ({ value, label: value }))}
+              onChange={(value) =>
+                update("payment", value as EntryInput["payment"])
               }
-            >
-              {payments.map((payment) => (
-                <option key={payment}>{payment}</option>
-              ))}
-            </select>
-          </label>
+            />
+          </div>
           <label className="form-label">
             메모 <span className="optional">선택</span>
             <textarea

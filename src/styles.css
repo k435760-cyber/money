@@ -3568,3 +3568,50 @@ select:focus {
   letter-spacing: -0.04em;
   white-space: normal;
 }
+
+/* In-site pickers share the same paper, spacing and focus states as the ledger. */
+.picker-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 42px;
+  padding: 10px 13px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--paper);
+  color: #4f5d46;
+  text-align: left;
+  font-size: 12px;
+}
+.picker-trigger svg { flex-shrink: 0; color: var(--muted); }
+.form-label .picker-trigger { width: 100%; }
+.month-navigation .picker-trigger.month-picker { min-height: 32px; padding: 4px 7px; border: 0; background: none; font-size: 14px; }
+.ledger-filters > .picker-trigger { min-width: 145px; }
+.picker-modal { max-width: 380px; }
+.picker-modal .modal-inner { padding: 24px; }
+.picker-modal .modal-header { margin-bottom: 18px; }
+.picker-modal .modal-header h2 { font-size: 21px; }
+.picker-options { display: grid; gap: 5px; }
+.picker-options > button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 43px; padding: 10px 13px; border-radius: 7px; text-align: left; }
+.picker-options > button:hover, .picker-month-grid > button:hover, .picker-day-grid > button:hover { background: #f0f3e8; }
+.picker-options > button[aria-pressed="true"], .picker-month-grid > button[aria-pressed="true"], .picker-day-grid > button[aria-pressed="true"] { background: var(--green); color: #fffefa; }
+.picker-year { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 12px; }
+.picker-year label { display: flex; gap: 9px; align-items: center; }
+.picker-year input { width: 76px; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--paper); }
+.picker-year > span { color: var(--muted); font-size: 10px; }
+.picker-calendar-nav { display: flex; justify-content: space-between; align-items: center; margin: 20px 0 15px; }
+.picker-calendar-nav .text-button { font-size: 14px; }
+.picker-month-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.picker-month-grid > button { min-height: 48px; border-radius: 8px; }
+.picker-weekdays, .picker-day-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 4px; text-align: center; }
+.picker-weekdays { margin-bottom: 9px; font-size: 11px; color: var(--muted); }
+.picker-weekdays > span:first-child { color: var(--rust); }
+.picker-day-grid > button { min-height: 39px; padding: 0; border-radius: 50%; font-size: 12px; }
+.picker-day-grid > button[aria-current="date"] { box-shadow: inset 0 0 0 1px #8a9d71; }
+.picker-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 23px; padding-top: 17px; border-top: 1px solid var(--border); }
+@media (max-width: 600px) {
+  .ledger-filters > .picker-trigger { flex: 1; min-width: 0; font-size: 11px; }
+  .picker-modal .modal-inner { padding: 22px; }
+  .month-navigation .picker-trigger.month-picker { font-size: 12px; gap: 5px; }
+}

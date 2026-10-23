@@ -34,6 +34,7 @@ import { Brand } from "./components/Icons";
 import { Modal } from "./components/Modal";
 import { EntryForm } from "./components/EntryForm";
 import { PlanForm } from "./components/PlanForm";
+import { DatePicker } from "./components/Pickers";
 import { AuthModal } from "./components/AuthModal";
 import { TransactionList } from "./components/Transactions";
 import { Dashboard } from "./pages/Dashboard";
@@ -255,24 +256,12 @@ export default function App() {
               >
                 <ChevronLeft size={17} />
               </button>
-              <label className="month-picker">
-                <span>{monthLabel(month)}</span>
-                <input
-                  type="month"
-                  aria-label="조회 월"
-                  value={month}
-                  min="1900-01"
-                  max="2100-12"
-                  onChange={(event) => {
-                    if (
-                      /^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value) &&
-                      event.target.value >= "1900-01" &&
-                      event.target.value <= "2100-12"
-                    )
-                      setMonth(event.target.value);
-                  }}
-                />
-              </label>
+              <DatePicker
+                mode="month"
+                label="조회 월"
+                value={month}
+                onChange={setMonth}
+              />
               <button
                 className="icon-button"
                 aria-label="다음 달"
@@ -480,9 +469,9 @@ export default function App() {
             </p>
             <h3>브라우저에는 무엇이 남나요?</h3>
             <p>
-              로그인 세션과 이 기기의 기록을 브라우저 저장 공간에 보관해요. 이 기기의
-              기록은 계정으로 자동 전송되지 않으며, 브라우저 데이터를 지우면
-              사라질 수 있어요.
+              로그인 세션과 이 기기의 기록을 브라우저 저장 공간에 보관해요. 이
+              기기의 기록은 계정으로 자동 전송되지 않으며, 브라우저 데이터를
+              지우면 사라질 수 있어요.
             </p>
             <h3>보관과 삭제</h3>
             <p>
