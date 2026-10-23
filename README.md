@@ -81,6 +81,10 @@ Cloudflare → **Workers & Pages → Create application → Pages → Import an 
 | 루트 디렉터리      | 저장소 루트 그대로   |
 | Node.js            | `24` (`.nvmrc` 포함) |
 
+`wrangler.toml`에도 `pages_build_output_dir = "./dist"`를 지정해 빌드 결과만 배포하도록 고정했습니다. Cloudflare의 **빌드 명령**은 `npm run build`로 설정해야 합니다. 이 값이 비어 있으면 빌드 결과가 생성되지 않습니다.
+
+배포 후 흰 화면이 뜨고 브라우저가 `/src/main.tsx`를 요청한다면, 원본 저장소가 그대로 공개된 상태입니다. 프로젝트의 Settings → Builds & deployments에서 빌드 명령을 확인한 뒤 새로 배포하세요. 정상 배포에서는 `/assets/*.js` 파일을 불러옵니다.
+
 요청한 Supabase URL과 공개용 publishable key가 코드에 포함되어 있으므로, 현재 프로젝트를 사용할 때 별도의 환경 변수를 추가할 필요가 없습니다. 다른 프로젝트를 사용한다면 위의 `VITE_*` 값을 Cloudflare 환경 변수에 설정한 뒤 다시 빌드하세요.
 
 배포 도메인이 정해지면 [Supabase URL Configuration](https://supabase.com/dashboard/project/dbneonomwrqwlbitwdtr/auth/url-configuration)의 **Redirect URLs**에 아래 주소를 추가하세요.
