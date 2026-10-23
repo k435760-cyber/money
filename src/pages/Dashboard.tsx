@@ -79,7 +79,10 @@ export function Dashboard({
 
   return (
     <div className="overview-grid">
-      <section className="summary-card" aria-label="이번 달 요약">
+      <section
+        className={`summary-card${expense === 0 ? " empty-spending" : ""}`}
+        aria-label="이번 달 요약"
+      >
         <div className="summary-spending">
           <span className="eyebrow">
             <span className="tiny-dot" />

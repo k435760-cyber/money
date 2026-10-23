@@ -26,6 +26,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Check dependencies for known high or critical vulnerabilities
+        run: npm audit --audit-level=high
       - run: npm test
       - run: npm run build
       - name: Check published static files match the source

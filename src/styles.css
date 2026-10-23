@@ -3396,10 +3396,10 @@ select:focus {
 }
 
 .summary-spending .hero-amount.hero-empty {
-  font-size: clamp(19px, 2.5vw, 28px);
+  font-size: clamp(18px, 4.5vw, 26px);
   line-height: 1.6;
   letter-spacing: -0.04em;
-  white-space: normal;
+  white-space: nowrap;
 }
 
 /* In-site pickers share the same paper, spacing and focus states as the ledger. */
@@ -3540,3 +3540,10 @@ select:focus {
   .calendar-summary[data-wide="true"] > div + div { padding: 12px 0 0; border-left: 0; border-top: 1px solid #e0e6d5; }
   .calendar-summary[data-wide="true"] strong { margin: 0; }
 }
+
+/* Give the full empty-state sentence its own row instead of squeezing it next to totals. */
+.summary-card.empty-spending { grid-template-columns: minmax(0,1fr); gap: 17px; }
+.empty-spending .summary-spending { grid-column: 1 / -1; }
+.empty-spending .summary-details { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); grid-column: 1 / -1; gap: 20px; padding: 16px 0 0; border-left: 0; border-top: 1px solid #dbe1cd; }
+.empty-spending .summary-details > div { flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.empty-spending .summary-sprout { display: none; }

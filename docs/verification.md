@@ -41,3 +41,11 @@ Cloudflare 정적 배포 주소: https://moneymanger.pages.dev/
 실제 사이트에서 원본 `/src/main.tsx`가 JavaScript 모듈로 배포되어 흰 화면이 발생하는 것을 재현했습니다. 완성된 정적 파일을 `dist`에 포함하고 Wrangler의 배포 경로를 고정해, Cloudflare에서 별도의 빌드 명령 없이 배포하도록 수정했습니다. Cloudflare 배포와 GitHub Actions 검증 모두 통과했습니다.
 
 배포된 실제 주소에서 기록 추가·수정·삭제, 새로고침 후 보존, 검색·필터·CSV 다운로드, 예산·메모 저장, 소비 달력, 5개 화면 너비를 다시 검증했습니다. 브라우저 JavaScript 오류는 없었습니다. Google OAuth 진입과 PKCE 콜백 주소도 확인했으며, 실제 Google 계정 동의는 사용자가 완료해야 합니다. 로그인 복귀 허용 주소는 `https://moneymanger.pages.dev/auth/callback/`입니다.
+
+
+### 보안 헤더와 지출 없는 상태
+
+- npm audit: 알려진 의존성 취약점 0건. CI에 high/critical 검사 추가.
+- 한푼의 가계부 두 테이블 RLS 활성화, Gemini 비밀 조회 RPC에 anon/authenticated 실행 권한이 없음을 재확인. 한푼 관련 보안 권고 없음.
+- CSP 적용 브라우저에서 인라인 스크립트 실행 및 외부 이미지·통신 차단 확인. 앱 로딩, 날짜 모달, 이미지 미리보기 유지.
+- 320/360/375/390/412/600/768/992/1280/1440px에서 “아직 지출 내역이 없습니다.”가 잘리지 않고 한 줄로 표시되는지 확인.
