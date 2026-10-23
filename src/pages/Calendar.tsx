@@ -72,6 +72,7 @@ export function Calendar({
             <button
               key={index}
               className={`calendar-cell ${localDate() === date ? "today" : ""} ${index % 7 === 0 ? "sunday" : index % 7 === 6 ? "saturday" : ""}`}
+              disabled={date > localDate() && rows.length === 0}
               onClick={() => onDay(date)}
               aria-label={`${Number(month.slice(5))}월 ${day}일, 기록 ${rows.length}개${expense ? `, 지출 ${money(expense)}원` : ""}${income ? `, 수입 ${money(income)}원` : ""}`}
             >

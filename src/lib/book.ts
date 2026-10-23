@@ -102,7 +102,10 @@ export function dateLabel(date: string) {
     weekday: "long",
   });
 }
-export function validateEntry(entry: EntryInput) {
+export function validateEntry(
+  entry: EntryInput,
+  { allowFuture = false }: { allowFuture?: boolean } = {},
+) {
   if (!entry.title.trim() || entry.title.trim().length > 100)
     throw new Error("내용은 1~100자로 적어주세요.");
   if (
@@ -118,6 +121,10 @@ export function validateEntry(entry: EntryInput) {
     localDate(new Date(`${entry.date}T12:00:00`)) !== entry.date
   )
     throw new Error("올바른 날짜를 골라주세요.");
+  if (!allowFuture && entry.date > localDate())
+    throw new Error(
+      "미래 날짜에는 기록할 수 없어요. 오늘 또는 이전 날짜를 골라주세요.",
+    );
   const allowed =
     entry.kind === "expense"
       ? expenseCategories

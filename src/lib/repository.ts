@@ -24,7 +24,7 @@ export function parseBook(value: unknown): Book {
       typeof entry.date !== "string"
     )
       throw new Error("저장된 기록의 형식이 올바르지 않아요.");
-    validateEntry(entry as Transaction);
+    validateEntry(entry as Transaction, { allowFuture: true });
   }
   for (const plan of value.plans) {
     if (

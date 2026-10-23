@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   daysInMonth,
   defaultPlan,
@@ -35,6 +35,34 @@ describe("calendar boundaries", () => {
     expect(() => validateEntry({ ...entry, date: "2026-04-31" })).toThrow();
     expect(() => validateEntry({ ...entry, date: "2026-13-01" })).toThrow();
     expect(() => validateEntry({ ...entry, date: "2024-02-29" })).not.toThrow();
+  });
+});
+
+describe("record dates", () => {
+  it("accepts today and past dates but rejects future income and expenses", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 9, 24, 12));
+    try {
+      for (const input of [
+        entry,
+        { ...entry, kind: "income" as const, category: "salary" as const },
+      ]) {
+        expect(() =>
+          validateEntry({ ...input, date: "2026-10-23" }),
+        ).not.toThrow();
+        expect(() =>
+          validateEntry({ ...input, date: "2026-10-24" }),
+        ).not.toThrow();
+        expect(() => validateEntry({ ...input, date: "2026-10-25" })).toThrow(
+          "미래 날짜",
+        );
+      }
+      expect(() =>
+        validateEntry({ ...entry, date: "2026-10-25" }, { allowFuture: true }),
+      ).not.toThrow();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

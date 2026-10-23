@@ -98,7 +98,7 @@ export default function App() {
   }, [toast]);
   const notify = (text: string) => setToast({ text, key: Date.now() });
   const addEntry = () =>
-    setEditor({ date: month === currentMonth() ? localDate() : `${month}-01` });
+    setEditor({ date: month >= currentMonth() ? localDate() : `${month}-01` });
   const editEntry = (entry: Transaction) => {
     setDay(null);
     setEditor({ entry });
@@ -441,13 +441,16 @@ export default function App() {
             )}
             <button
               className="button primary full-width"
+              disabled={day > localDate()}
               onClick={() => {
                 setEditor({ date: day });
                 setDay(null);
               }}
             >
               <Plus size={16} />
-              이날 기록하기
+              {day > localDate()
+                ? "미래 날짜에는 기록할 수 없어요"
+                : "이날 기록하기"}
             </button>
           </div>
         </Modal>
