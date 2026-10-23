@@ -137,7 +137,7 @@ export function useLedger() {
       }));
     },
     async signOut() {
-      const { error } = await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut({ scope: "local" });
       if (error) throw error;
       setLoaded(null);
       setUser(null);

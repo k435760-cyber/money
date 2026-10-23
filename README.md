@@ -62,29 +62,36 @@ VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_your_key
 3. Supabase → Authentication → URL Configuration → Redirect URLs에 다음을 추가합니다.
    - `http://localhost:5173/auth/callback/`
    - `https://<배포 도메인>/auth/callback/`
-   - GitHub Pages에서는 `https://k435760-cyber.github.io/money/auth/callback/`
+   - Cloudflare에서는 `https://<프로젝트명>.pages.dev/auth/callback/` 또는 실제 커스텀 도메인의 `/auth/callback/`
 4. Google의 OAuth 동의 화면이 테스트 상태라면 실제로 사용할 계정을 테스트 사용자에 추가합니다.
 
 기존 앱과 Supabase 프로젝트를 함께 사용한다면 기존 Site URL을 바꾸지 말고, 한푼의 콜백 주소를 Redirect URLs 목록에 추가하세요. 인증은 PKCE S256을 사용하며, 로그인 콜백의 코드 교환과 세션 갱신은 Supabase SDK가 처리합니다.
 
 ## 배포
 
-### GitHub Pages
+### Cloudflare Pages
 
-[Pages 설정](https://github.com/k435760-cyber/money/settings/pages)에서 Source를 **GitHub Actions**로 선택하세요. 이후 `main`에 push하거나 [Actions](https://github.com/k435760-cyber/money/actions)의 `Verify and deploy Hanpun`을 실행하면 테스트와 빌드를 거쳐 배포됩니다.
+Cloudflare → **Workers & Pages → Create application → Pages → Import an existing Git repository**에서 `k435760-cyber/money`를 선택하고 아래와 같이 설정하세요.
 
-배포 후 주소: `https://k435760-cyber.github.io/money/`
+| 항목               | 값                   |
+| ------------------ | -------------------- |
+| 프로덕션 브랜치    | `main`               |
+| 빌드 명령          | `npm run build`      |
+| 빌드 결과 디렉터리 | `dist`               |
+| 루트 디렉터리      | 저장소 루트 그대로   |
+| Node.js            | `24` (`.nvmrc` 포함) |
 
-워크플로가 `VITE_BASE_PATH=/money/`를 설정합니다. 정적 호스트용 `auth/callback/index.html`도 빌드 시 생성하므로 Google 로그인 콜백 주소를 직접 열 수 있습니다. Supabase Redirect URLs에는 `https://k435760-cyber.github.io/money/auth/callback/`를 추가하세요. 기존 Site URL은 변경할 필요가 없습니다.
+요청한 Supabase URL과 공개용 publishable key가 코드에 포함되어 있으므로, 현재 프로젝트를 사용할 때 별도의 환경 변수를 추가할 필요가 없습니다. 다른 프로젝트를 사용한다면 위의 `VITE_*` 값을 Cloudflare 환경 변수에 설정한 뒤 다시 빌드하세요.
 
-### Vercel
+배포 도메인이 정해지면 [Supabase URL Configuration](https://supabase.com/dashboard/project/dbneonomwrqwlbitwdtr/auth/url-configuration)의 **Redirect URLs**에 아래 주소를 추가하세요.
 
-Vercel에서 이 GitHub 저장소를 가져오면 Vite 설정을 자동으로 사용합니다. `vercel.json`에는 빌드 명령, 보안 응답 헤더, `/auth/callback`을 포함한 SPA 라우팅 설정이 있습니다.
+```text
+https://<실제 배포 도메인>/auth/callback/
+```
 
-- 빌드 명령: `npm run build`
-- 결과 폴더: `dist`
-- Node.js: 24
-- 다른 Supabase 프로젝트를 사용한다면 위의 `VITE_*` 환경 변수를 설정한 뒤 다시 빌드합니다.
+기존 프로젝트의 Site URL은 변경하지 않아도 됩니다. Google 로그인 후 이 주소로 복귀합니다. 정적 콜백 페이지 `dist/auth/callback/index.html`은 빌드할 때 자동으로 생성됩니다. Cloudflare에서 사용하는 응답 헤더는 `public/_headers`에 있습니다.
+
+직접 업로드 방식이라면 로컬에서 `npm ci` → `npm run build` 후 `dist` 폴더의 내용을 업로드하면 됩니다. 배포는 사용자가 Cloudflare 설정을 마친 뒤 진행합니다. GitHub Actions는 테스트와 빌드만 실행합니다.
 
 ## 데이터와 보안
 
