@@ -62,39 +62,15 @@ export function Ledger({
     setKind("all");
     setPage(1);
   };
-  async function download() {
-    const filename = `한푼_${month}${hasFilters ? "_검색결과" : ""}.csv`;
-    const file = new File([exportCsv(filtered)], filename, {
-      type: "text/csv;charset=utf-8;",
-    });
-
-    // Mobile browsers often handle file downloads through the system share
-    // sheet, where the user can save the CSV to Files or Downloads.
-    if (
-      navigator.maxTouchPoints > 0 &&
-      navigator.canShare?.({ files: [file] }) &&
-      navigator.share
-    ) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: "한푼 가계부 기록",
-          text: `${month} 가계부 기록 CSV`,
-        });
-        return;
-      } catch (error) {
-        // A cancelled share is a deliberate user action; don't start a second
-        // download unexpectedly. Other share errors fall through to download.
-        if (error instanceof DOMException && error.name === "AbortError") return;
-      }
-    }
-
-    const url = URL.createObjectURL(file);
+  function download() {
+    const url = URL.createObjectURL(
+      new Blob([exportCsv(filtered)], { type: "text/csv;charset=utf-8;" }),
+    );
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = filename;
+    anchor.download = `한푼_${month}${hasFilters ? "_검색결과" : ""}.csv`;
     anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   return (
     <div className="ledger-page">
