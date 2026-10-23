@@ -76,14 +76,14 @@ Cloudflare → **Workers & Pages → Create application → Pages → Import an 
 | 항목               | 값                   |
 | ------------------ | -------------------- |
 | 프로덕션 브랜치    | `main`               |
-| 빌드 명령          | `npm run build`      |
+| 빌드 명령          | 비워두기             |
 | 빌드 결과 디렉터리 | `dist`               |
 | 루트 디렉터리      | 저장소 루트 그대로   |
 | Node.js            | `24` (`.nvmrc` 포함) |
 
-`wrangler.toml`에도 `pages_build_output_dir = "./dist"`를 지정해 빌드 결과만 배포하도록 고정했습니다. Cloudflare의 **빌드 명령**은 `npm run build`로 설정해야 합니다. 이 값이 비어 있으면 빌드 결과가 생성되지 않습니다.
+완성된 **정적 HTML·JS·CSS를 `dist`에 포함**했습니다. `wrangler.toml`이 배포 폴더를 `dist`로 지정하므로 Cloudflare에서 별도 빌드 없이 그대로 공개할 수 있습니다. 저장소의 소스용 `index.html`이 아닌 `dist/index.html`이 배포됩니다.
 
-배포 후 흰 화면이 뜨고 브라우저가 `/src/main.tsx`를 요청한다면, 원본 저장소가 그대로 공개된 상태입니다. 프로젝트의 Settings → Builds & deployments에서 빌드 명령을 확인한 뒤 새로 배포하세요. 정상 배포에서는 `/assets/*.js` 파일을 불러옵니다.
+화면이나 기능의 소스를 수정한 경우에는 로컬에서 `npm run build`를 실행한 뒤 변경된 `dist`도 함께 커밋하세요. GitHub Actions가 소스와 정적 파일이 일치하는지 검사합니다. Cloudflare의 빌드 명령을 `npm run build`로 설정해 호스팅 시 다시 빌드하는 방식도 지원합니다.
 
 요청한 Supabase URL과 공개용 publishable key가 코드에 포함되어 있으므로, 현재 프로젝트를 사용할 때 별도의 환경 변수를 추가할 필요가 없습니다. 다른 프로젝트를 사용한다면 위의 `VITE_*` 값을 Cloudflare 환경 변수에 설정한 뒤 다시 빌드하세요.
 
@@ -95,7 +95,7 @@ https://<실제 배포 도메인>/auth/callback/
 
 기존 프로젝트의 Site URL은 변경하지 않아도 됩니다. Google 로그인 후 이 주소로 복귀합니다. 정적 콜백 페이지 `dist/auth/callback/index.html`은 빌드할 때 자동으로 생성됩니다. Cloudflare에서 사용하는 응답 헤더는 `public/_headers`에 있습니다.
 
-직접 업로드 방식이라면 로컬에서 `npm ci` → `npm run build` 후 `dist` 폴더의 내용을 업로드하면 됩니다. 배포는 사용자가 Cloudflare 설정을 마친 뒤 진행합니다. GitHub Actions는 테스트와 빌드만 실행합니다.
+직접 업로드 방식이라면 저장소에 포함된 `dist` 폴더의 내용을 업로드하면 됩니다. GitHub 연동에서는 `main`의 정적 파일을 자동 배포합니다.
 
 ## 데이터와 보안
 

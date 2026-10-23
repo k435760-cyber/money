@@ -28,3 +28,5 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - name: Check published static files match the source
+        run: git diff --exit-code -- dist

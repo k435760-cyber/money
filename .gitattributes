@@ -1,0 +1,2 @@
+# Compiled deployment files are generated; review their sources under src/.
+dist/** linguist-generated=true -whitespace

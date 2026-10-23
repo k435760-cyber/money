@@ -80,7 +80,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# dist is versioned so Cloudflare can publish the static files without a build step.
 .output
 
 # Gatsby files
