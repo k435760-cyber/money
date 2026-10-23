@@ -106,7 +106,7 @@ export function AuthModal({
             에 동의하게 됩니다.
           </p>
           <p className="auth-demo-note">
-            체험 기록은 계정에 자동으로 옮겨지지 않아요.
+            이 기기의 기록은 계정에 자동으로 옮겨지지 않아요.
           </p>
         </div>
       )}

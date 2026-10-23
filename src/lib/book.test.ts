@@ -82,7 +82,7 @@ describe("financial input", () => {
 describe("monthly budgets", () => {
   it("accepts a zero budget and rejects missing, negative, or fractional limits", () => {
     const plan = defaultPlan("2026-10");
-    expect(totalBudget(plan)).toBe(1900000);
+    expect(totalBudget(plan)).toBe(0);
     expect(() =>
       validatePlan({ ...plan, budgets: { ...plan.budgets, food: 0 } }),
     ).not.toThrow();

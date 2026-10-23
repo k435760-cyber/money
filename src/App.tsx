@@ -109,7 +109,7 @@ export default function App() {
       id
         ? "기록을 수정했어요."
         : isDemo
-          ? "체험 가계부에 기록을 남겼어요."
+          ? "이 기기 가계부에 기록을 남겼어요."
           : "오늘의 기록을 남겼어요.",
     );
   }
@@ -210,7 +210,7 @@ export default function App() {
           <div className="topbar-right">
             <button className="mode-badge" onClick={() => setAuthOpen(true)}>
               <span className="tiny-dot" />
-              {isDemo ? "체험 가계부" : "나의 가계부"}
+              {isDemo ? "이 기기 가계부" : "나의 가계부"}
               <ChevronRight size={12} />
             </button>
             <span className="topbar-date">
@@ -293,8 +293,8 @@ export default function App() {
             <span className="month-toolbar-note">
               {isDemo ? (
                 <>
-                  <span className="tiny-dot" />
-                  체험 기록은 이 브라우저에 저장돼요.
+                  <span className="tiny-dot" />이 기기의 기록은 이 브라우저에
+                  저장돼요.
                 </>
               ) : (
                 <>
@@ -480,7 +480,7 @@ export default function App() {
             </p>
             <h3>브라우저에는 무엇이 남나요?</h3>
             <p>
-              로그인 세션과 체험용 기록을 브라우저 저장 공간에 보관해요. 체험
+              로그인 세션과 이 기기의 기록을 브라우저 저장 공간에 보관해요. 이 기기의
               기록은 계정으로 자동 전송되지 않으며, 브라우저 데이터를 지우면
               사라질 수 있어요.
             </p>
@@ -520,8 +520,8 @@ export default function App() {
               <section>
                 <h3>나에게 맞는 예산 정하기</h3>
                 <p>
-                  ‘예산 관리’에서 카테고리별 한도를 정해요. 처음에는 기본 예산이
-                  표시되며, 원하는 금액으로 바꿀 수 있어요.
+                  ‘예산 관리’에서 카테고리별 한도를 정해요. 처음에는 예산이
+                  설정되어 있지 않으며, 원하는 금액으로 바꿀 수 있어요.
                 </p>
               </section>
             </div>
@@ -540,8 +540,8 @@ export default function App() {
               <section>
                 <h3>어디서든 이어서 쓰기</h3>
                 <p>
-                  Google로 로그인하면 내 계정에 저장돼요. 체험 가계부는 별도로
-                  보관되며 계정에 자동으로 합쳐지지 않아요.
+                  Google로 로그인하면 내 계정에 저장돼요. 이 기기 가계부는
+                  별도로 보관되며 계정에 자동으로 합쳐지지 않아요.
                 </p>
               </section>
             </div>

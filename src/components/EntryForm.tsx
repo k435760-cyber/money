@@ -209,7 +209,7 @@ export function EntryForm({
           </p>
         )}
         {isDemo && (
-          <p className="form-hint">체험 기록은 이 브라우저에 저장돼요.</p>
+          <p className="form-hint">이 기기의 기록은 이 브라우저에 저장돼요.</p>
         )}
         {confirmDelete ? (
           <div className="delete-confirm">

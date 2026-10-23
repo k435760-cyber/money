@@ -1,0 +1,540 @@
+{
+  "transactions": [
+    {
+      "id": "3f778a27-4c2e-4f21-95ff-c94b1a58547d",
+      "date": "2026-10-01",
+      "title": "이번 달 월급",
+      "amount": 3200000,
+      "category": "salary",
+      "kind": "income",
+      "payment": "계좌이체",
+      "memo": ""
+    },
+    {
+      "id": "2ad2855a-20b5-43a5-bb0f-e4946c71e499",
+      "date": "2026-10-01",
+      "title": "우리 집 월세",
+      "amount": 450000,
+      "category": "living",
+      "kind": "expense",
+      "payment": "계좌이체",
+      "memo": ""
+    },
+    {
+      "id": "388890ef-05c2-4a7b-a677-67bb09da20da",
+      "date": "2026-10-02",
+      "title": "장보기 · 동네 마트",
+      "amount": 58300,
+      "category": "food",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "9552768b-a7f3-49b5-b496-33a949e9127b",
+      "date": "2026-10-03",
+      "title": "출근길 커피",
+      "amount": 4500,
+      "category": "cafe",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "ee7a4ad7-e1a5-423a-9422-79fba4b9c81c",
+      "date": "2026-10-04",
+      "title": "교통카드 충전",
+      "amount": 50000,
+      "category": "transport",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "94d9d7c7-93bd-4a5f-9980-4a7204464a9c",
+      "date": "2026-10-05",
+      "title": "좋아하는 작가의 신간",
+      "amount": 17800,
+      "category": "culture",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "216da461-79bb-476b-9ae3-47ee3d305a37",
+      "date": "2026-10-06",
+      "title": "점심 · 따뜻한 국수",
+      "amount": 9500,
+      "category": "food",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "2091a8cf-d98e-4f60-b2c5-3695db07a406",
+      "date": "2026-10-07",
+      "title": "가을 니트 한 벌",
+      "amount": 69000,
+      "category": "shopping",
+      "kind": "expense",
+      "payment": "신용카드",
+      "memo": ""
+    },
+    {
+      "id": "040a68b9-7b3f-44c2-86fc-663d66e2901d",
+      "date": "2026-10-08",
+      "title": "동네 빵집",
+      "amount": 12800,
+      "category": "cafe",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "b0c1a96d-d135-4181-a852-95098dd99de6",
+      "date": "2026-10-09",
+      "title": "친구와 저녁",
+      "amount": 38000,
+      "category": "food",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "4f8e9f98-489e-48cd-8a29-0a1c4b8c95d8",
+      "date": "2026-10-10",
+      "title": "휴대폰 요금",
+      "amount": 45000,
+      "category": "living",
+      "kind": "expense",
+      "payment": "계좌이체",
+      "memo": ""
+    },
+    {
+      "id": "9449959c-81b4-4c84-b079-c3389c9aca63",
+      "date": "2026-10-11",
+      "title": "주말 장보기",
+      "amount": 64200,
+      "category": "food",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "868a3e8d-1b20-42b3-a55b-cfb44701e25c",
+      "date": "2026-10-12",
+      "title": "넷플릭스 정기결제",
+      "amount": 17000,
+      "category": "culture",
+      "kind": "expense",
+      "payment": "신용카드",
+      "memo": ""
+    },
+    {
+      "id": "05eda114-3b1b-4476-83bf-9eece958cf68",
+      "date": "2026-10-13",
+      "title": "산책 후 아메리카노",
+      "amount": 4800,
+      "category": "cafe",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "e5833074-8bc7-4446-a93c-a1afbbc56b1f",
+      "date": "2026-10-14",
+      "title": "프리랜서 작업비",
+      "amount": 250000,
+      "category": "extra",
+      "kind": "income",
+      "payment": "계좌이체",
+      "memo": ""
+    },
+    {
+      "id": "8c965371-5aa6-4535-a649-e63b1ec33e15",
+      "date": "2026-10-15",
+      "title": "운동화",
+      "amount": 89000,
+      "category": "shopping",
+      "kind": "expense",
+      "payment": "신용카드",
+      "memo": ""
+    },
+    {
+      "id": "df64afdc-e823-442a-8e66-852cfec8d276",
+      "date": "2026-10-16",
+      "title": "영양제",
+      "amount": 32000,
+      "category": "health",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "b07f7f96-c15c-4dcf-a7c2-96d89af45a49",
+      "date": "2026-10-17",
+      "title": "작은 꽃 한 다발",
+      "amount": 12000,
+      "category": "other",
+      "kind": "expense",
+      "payment": "현금",
+      "memo": ""
+    },
+    {
+      "id": "aa18e402-0c4c-4a35-8c71-3ae88b72c893",
+      "date": "2026-10-18",
+      "title": "주말 브런치",
+      "amount": 24500,
+      "category": "food",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "5f48060b-67d7-41bb-93a9-43f5d91dd3cb",
+      "date": "2026-10-19",
+      "title": "전시 · 가을의 풍경",
+      "amount": 18000,
+      "category": "culture",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "263b53f6-af61-4c23-8009-8c499281ea15",
+      "date": "2026-10-20",
+      "title": "장보기 · 제철 과일",
+      "amount": 28600,
+      "category": "food",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "73a227c9-8670-4214-9d72-e6ab0a44a56d",
+      "date": "2026-10-21",
+      "title": "퇴근길 버스",
+      "amount": 1500,
+      "category": "transport",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "05244bb7-24e1-448c-aaf9-2530faf531a3",
+      "date": "2026-10-22",
+      "title": "오후의 커피 한 잔",
+      "amount": 5500,
+      "category": "cafe",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "91562683-a86f-4348-afda-6f950079fba0",
+      "date": "2026-10-23",
+      "title": "동네 식당에서 점심",
+      "amount": 11000,
+      "category": "food",
+      "kind": "expense",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "321c0393-0002-4654-8bd9-fd185fff59d8",
+      "date": "2026-09-01",
+      "title": "지난달 월급",
+      "amount": 3200000,
+      "kind": "income",
+      "category": "salary",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "068ef8f9-15de-4d9f-9ab4-62a650ba742f",
+      "date": "2026-09-02",
+      "title": "지난달의 기록",
+      "amount": 450000,
+      "kind": "expense",
+      "category": "living",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "52152700-4180-441b-85db-bcf5533be03c",
+      "date": "2026-09-03",
+      "title": "지난달의 기록",
+      "amount": 36000,
+      "kind": "expense",
+      "category": "transport",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "0b640a1b-1247-48db-87fa-c873e30e909a",
+      "date": "2026-09-04",
+      "title": "지난달의 기록",
+      "amount": 42000,
+      "kind": "expense",
+      "category": "living",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "51b1cd9a-3ac8-4214-afdb-3a3241f03642",
+      "date": "2026-09-05",
+      "title": "지난달의 기록",
+      "amount": 18000,
+      "kind": "expense",
+      "category": "culture",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "01bee7d3-1971-4c1b-a5ab-f5d740f53dc0",
+      "date": "2026-09-06",
+      "title": "지난달의 기록",
+      "amount": 24000,
+      "kind": "expense",
+      "category": "health",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "44b242b9-ffd0-4d71-814b-77f02923e45d",
+      "date": "2026-09-07",
+      "title": "지난달의 기록",
+      "amount": 30000,
+      "kind": "expense",
+      "category": "other",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "f299f983-2990-44c4-882f-c16398dd0c40",
+      "date": "2026-09-08",
+      "title": "지난달의 기록",
+      "amount": 36000,
+      "kind": "expense",
+      "category": "food",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "137b5172-4b03-4b55-8fd9-729f3caaa100",
+      "date": "2026-09-09",
+      "title": "지난달의 기록",
+      "amount": 42000,
+      "kind": "expense",
+      "category": "cafe",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "e2d6d761-2d0d-407c-938a-a242e3c2c67d",
+      "date": "2026-09-10",
+      "title": "지난달의 기록",
+      "amount": 18000,
+      "kind": "expense",
+      "category": "shopping",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "8e7f6f30-c2b8-406a-af34-6f573c068506",
+      "date": "2026-09-11",
+      "title": "지난달의 기록",
+      "amount": 24000,
+      "kind": "expense",
+      "category": "transport",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "35dd438a-9e43-465d-ad7a-b3a05a40da12",
+      "date": "2026-09-12",
+      "title": "지난달의 기록",
+      "amount": 30000,
+      "kind": "expense",
+      "category": "living",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "f2f189f4-bbb8-46e9-9db9-f63d9f94c60f",
+      "date": "2026-09-13",
+      "title": "지난달의 기록",
+      "amount": 36000,
+      "kind": "expense",
+      "category": "culture",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "53e907d2-b6f2-41b6-96fa-8194752b39aa",
+      "date": "2026-09-14",
+      "title": "지난달의 기록",
+      "amount": 42000,
+      "kind": "expense",
+      "category": "health",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "1c2b595e-7724-4181-ab95-1da62221f743",
+      "date": "2026-09-15",
+      "title": "지난달의 기록",
+      "amount": 18000,
+      "kind": "expense",
+      "category": "other",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "27dfa2b4-c67d-4547-948c-feec210b0cbb",
+      "date": "2026-09-16",
+      "title": "지난달의 기록",
+      "amount": 24000,
+      "kind": "expense",
+      "category": "food",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "1ff8fb4b-4293-4d25-9e39-7861f2fc39be",
+      "date": "2026-09-17",
+      "title": "지난달의 기록",
+      "amount": 30000,
+      "kind": "expense",
+      "category": "cafe",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "29bf6d0d-2c0b-4131-8f92-6d31726f645d",
+      "date": "2026-09-18",
+      "title": "지난달의 기록",
+      "amount": 36000,
+      "kind": "expense",
+      "category": "shopping",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "f225164a-81fd-4f03-b274-6c327095dd85",
+      "date": "2026-09-19",
+      "title": "지난달의 기록",
+      "amount": 42000,
+      "kind": "expense",
+      "category": "transport",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "07459749-da2a-4be6-bc3a-2a28eda03864",
+      "date": "2026-09-20",
+      "title": "지난달의 기록",
+      "amount": 18000,
+      "kind": "expense",
+      "category": "living",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "827e1e30-a997-479e-9db2-80d5b91c5f37",
+      "date": "2026-09-21",
+      "title": "지난달의 기록",
+      "amount": 24000,
+      "kind": "expense",
+      "category": "culture",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "6c4c6ae0-11a3-4335-96a3-ddbf5f2771c4",
+      "date": "2026-09-22",
+      "title": "지난달의 기록",
+      "amount": 30000,
+      "kind": "expense",
+      "category": "health",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "7054e9ff-4b2d-4201-a057-93e18f35169d",
+      "date": "2026-09-23",
+      "title": "지난달의 기록",
+      "amount": 36000,
+      "kind": "expense",
+      "category": "other",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "cc4e44f6-e022-4387-968e-8ad122a1d2dd",
+      "date": "2026-09-24",
+      "title": "지난달의 기록",
+      "amount": 42000,
+      "kind": "expense",
+      "category": "food",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "231f3fb6-5adc-4d1c-9697-d4217cc0ddc4",
+      "date": "2026-09-25",
+      "title": "지난달의 기록",
+      "amount": 18000,
+      "kind": "expense",
+      "category": "cafe",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "a2475c2b-92c6-4b2f-a723-f4d357cf03fa",
+      "date": "2026-09-26",
+      "title": "지난달의 기록",
+      "amount": 24000,
+      "kind": "expense",
+      "category": "shopping",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "496a65a0-6ffd-4fbb-a18d-84b7005f7bd7",
+      "date": "2026-09-27",
+      "title": "지난달의 기록",
+      "amount": 30000,
+      "kind": "expense",
+      "category": "transport",
+      "payment": "체크카드",
+      "memo": ""
+    },
+    {
+      "id": "81dd6cbd-2ac3-4a08-a2c4-493e76ce4c54",
+      "date": "2026-09-28",
+      "title": "지난달의 기록",
+      "amount": 36000,
+      "kind": "expense",
+      "category": "living",
+      "payment": "체크카드",
+      "memo": ""
+    }
+  ],
+  "plans": [
+    {
+      "month": "2026-10",
+      "budgets": {
+        "food": 450000,
+        "cafe": 150000,
+        "shopping": 300000,
+        "transport": 150000,
+        "living": 500000,
+        "culture": 150000,
+        "health": 100000,
+        "other": 100000
+      },
+      "note": "가을엔 가까운 곳으로 산책을 자주 가기.\n물건보다 좋은 시간을 모아보자."
+    }
+  ]
+}

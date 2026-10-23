@@ -32,16 +32,24 @@ export function Budget({
         <div>
           <span className="eyebrow">나를 위한 한 달의 약속</span>
           <h2>
-            {remaining >= 0
-              ? "여유 있게, 계획한 만큼."
-              : "잠깐, 씀씀이를 돌아볼까요?"}
+            {budget === 0
+              ? "나에게 맞는 예산부터."
+              : remaining >= 0
+                ? "여유 있게, 계획한 만큼."
+                : "잠깐, 씀씀이를 돌아볼까요?"}
           </h2>
           <p>
-            이번 달은 <strong>{money(budget)}원</strong> 안에서 생활하기로
-            했어요.
+            {budget ? (
+              <>
+                이번 달은 <strong>{money(budget)}원</strong> 안에서 생활하기로
+                했어요.
+              </>
+            ) : (
+              "카테고리별 예산을 정해보세요."
+            )}
           </p>
           <button className="text-button" onClick={onEdit}>
-            예산 다시 정하기
+            {budget ? "예산 다시 정하기" : "예산 정하기"}
             <Pencil size={14} />
           </button>
         </div>

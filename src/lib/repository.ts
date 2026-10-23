@@ -1,8 +1,9 @@
 import { supabase } from "./supabase";
-import { makeDemoBook, validateEntry, validatePlan } from "./book";
+import { validateEntry, validatePlan } from "./book";
 import type { Book, EntryInput, Plan, Transaction } from "./book";
 
-const DEMO_KEY = "hanpun-demo-v1";
+const DEMO_KEY = "hanpun-local-v2";
+import { removeLegacySamples } from "./legacy";
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
@@ -41,7 +42,10 @@ export function parseBook(value: unknown): Book {
 function readDemo(): Book {
   const raw = localStorage.getItem(DEMO_KEY);
   if (raw) return parseBook(JSON.parse(raw));
-  const book = makeDemoBook();
+  const legacy = localStorage.getItem("hanpun-demo-v1");
+  const book: Book = legacy
+    ? removeLegacySamples(parseBook(JSON.parse(legacy)))
+    : { transactions: [], plans: [] };
   localStorage.setItem(DEMO_KEY, JSON.stringify(book));
   return book;
 }

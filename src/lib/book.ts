@@ -72,14 +72,14 @@ export function defaultPlan(month: string): Plan {
   return {
     month,
     budgets: {
-      food: 450000,
-      cafe: 150000,
-      shopping: 300000,
-      transport: 150000,
-      living: 500000,
-      culture: 150000,
-      health: 100000,
-      other: 100000,
+      food: 0,
+      cafe: 0,
+      shopping: 0,
+      transport: 0,
+      living: 0,
+      culture: 0,
+      health: 0,
+      other: 0,
     },
     note: "",
   };
@@ -149,83 +149,6 @@ export function validatePlan(plan: Plan) {
     )
   )
     throw new Error("예산은 0원부터 9,999,999,999원까지 입력할 수 있어요.");
-}
-
-export function makeDemoBook(): Book {
-  const month = currentMonth();
-  const today = new Date().getDate();
-  const entries: Transaction[] = [];
-  const add = (
-    day: number,
-    title: string,
-    amount: number,
-    category: Category,
-    kind: Kind = "expense",
-    payment: Payment = "체크카드",
-  ) => {
-    entries.push({
-      id: crypto.randomUUID(),
-      date: `${month}-${String(Math.min(day, today)).padStart(2, "0")}`,
-      title,
-      amount,
-      category,
-      kind,
-      payment,
-      memo: "",
-    });
-  };
-  add(1, "이번 달 월급", 3200000, "salary", "income", "계좌이체");
-  add(1, "우리 집 월세", 450000, "living", "expense", "계좌이체");
-  add(2, "장보기 · 동네 마트", 58300, "food");
-  add(3, "출근길 커피", 4500, "cafe");
-  add(4, "교통카드 충전", 50000, "transport");
-  add(5, "좋아하는 작가의 신간", 17800, "culture");
-  add(6, "점심 · 따뜻한 국수", 9500, "food");
-  add(7, "가을 니트 한 벌", 69000, "shopping", "expense", "신용카드");
-  add(8, "동네 빵집", 12800, "cafe");
-  add(9, "친구와 저녁", 38000, "food");
-  add(10, "휴대폰 요금", 45000, "living", "expense", "계좌이체");
-  add(11, "주말 장보기", 64200, "food");
-  add(12, "넷플릭스 정기결제", 17000, "culture", "expense", "신용카드");
-  add(13, "산책 후 아메리카노", 4800, "cafe");
-  add(14, "프리랜서 작업비", 250000, "extra", "income", "계좌이체");
-  add(15, "운동화", 89000, "shopping", "expense", "신용카드");
-  add(16, "영양제", 32000, "health");
-  add(17, "작은 꽃 한 다발", 12000, "other", "expense", "현금");
-  add(18, "주말 브런치", 24500, "food");
-  add(19, "전시 · 가을의 풍경", 18000, "culture");
-  add(20, "장보기 · 제철 과일", 28600, "food");
-  add(21, "퇴근길 버스", 1500, "transport");
-  add(22, "오후의 커피 한 잔", 5500, "cafe");
-  add(23, "동네 식당에서 점심", 11000, "food");
-  const previous = shiftMonth(month, -1);
-  for (let day = 1; day <= 28; day++) {
-    entries.push({
-      id: crypto.randomUUID(),
-      date: `${previous}-${String(day).padStart(2, "0")}`,
-      title: day === 1 ? "지난달 월급" : "지난달의 기록",
-      amount:
-        day === 1 ? 3200000 : day === 2 ? 450000 : 18000 + (day % 5) * 6000,
-      kind: day === 1 ? "income" : "expense",
-      category:
-        day === 1
-          ? "salary"
-          : day === 2
-            ? "living"
-            : expenseCategories[day % 8],
-      payment: "체크카드",
-      memo: "",
-    });
-  }
-  return {
-    transactions: entries,
-    plans: [
-      {
-        ...defaultPlan(month),
-        note: "가을엔 가까운 곳으로 산책을 자주 가기.\n물건보다 좋은 시간을 모아보자.",
-      },
-    ],
-  };
 }
 
 const csvCell = (value: string) =>
