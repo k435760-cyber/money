@@ -85,7 +85,7 @@ Cloudflare → **Workers & Pages → Create application → Pages → Import an 
 
 화면이나 기능의 소스를 수정한 경우에는 로컬에서 `npm run build`를 실행한 뒤 변경된 `dist`도 함께 커밋하세요. GitHub Actions가 소스와 정적 파일이 일치하는지 검사합니다. Cloudflare의 빌드 명령을 `npm run build`로 설정해 호스팅 시 다시 빌드하는 방식도 지원합니다.
 
-요청한 Supabase URL과 공개용 publishable key가 코드에 포함되어 있으므로, 현재 프로젝트를 사용할 때 별도의 환경 변수를 추가할 필요가 없습니다. 다른 프로젝트를 사용한다면 위의 `VITE_*` 값을 Cloudflare 환경 변수에 설정한 뒤 다시 빌드하세요.
+요청한 Supabase URL과 공개용 publishable key가 정적 파일에 포함되어 있으므로, 현재 프로젝트를 사용할 때 별도의 환경 변수를 추가할 필요가 없습니다. 다른 프로젝트를 사용한다면 `.env.local`의 `VITE_*` 값을 변경하고 로컬에서 `npm run build`를 실행한 뒤 `dist`를 함께 커밋하세요. Cloudflare에서 직접 빌드하는 방식을 선택한 경우에는 Cloudflare 빌드 환경 변수를 사용할 수도 있습니다.
 
 배포 도메인이 정해지면 [Supabase URL Configuration](https://supabase.com/dashboard/project/dbneonomwrqwlbitwdtr/auth/url-configuration)의 **Redirect URLs**에 아래 주소를 추가하세요.
 

@@ -36,4 +36,8 @@
 
 Google 계정 선택과 사용자 동의는 실제 사용자가 직접 완료해야 합니다. 자동 검증에서는 Google로 이동하기 직전까지의 OAuth 요청과 데이터베이스 접근 규칙을 확인했습니다. 새 배포 도메인의 콜백은 Supabase Redirect URLs에 허용되어 있어야 합니다.
 
-실제 배포는 사용자가 Cloudflare에 진행하기로 했습니다. 정적 빌드와 콜백 페이지, Cloudflare 응답 헤더를 준비했습니다. Cloudflare 배포 주소에서의 최종 인증·저장 흐름 검증은 아직 진행하지 않았습니다. 도메인이 정해지면 Supabase Redirect URLs에 `https://<실제 배포 도메인>/auth/callback/`를 추가해야 합니다.
+Cloudflare 정적 배포 주소: https://moneymanger.pages.dev/
+
+실제 사이트에서 원본 `/src/main.tsx`가 JavaScript 모듈로 배포되어 흰 화면이 발생하는 것을 재현했습니다. 완성된 정적 파일을 `dist`에 포함하고 Wrangler의 배포 경로를 고정해, Cloudflare에서 별도의 빌드 명령 없이 배포하도록 수정했습니다. Cloudflare 배포와 GitHub Actions 검증 모두 통과했습니다.
+
+배포된 실제 주소에서 기록 추가·수정·삭제, 새로고침 후 보존, 검색·필터·CSV 다운로드, 예산·메모 저장, 소비 달력, 5개 화면 너비를 다시 검증했습니다. 브라우저 JavaScript 오류는 없었습니다. Google OAuth 진입과 PKCE 콜백 주소도 확인했으며, 실제 Google 계정 동의는 사용자가 완료해야 합니다. 로그인 복귀 허용 주소는 `https://moneymanger.pages.dev/auth/callback/`입니다.
