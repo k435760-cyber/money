@@ -1112,6 +1112,27 @@ select {
   font-size: 7px;
   letter-spacing: 1.8px;
 }
+.site-download-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 9px;
+  border: 1px solid #dfe4d8;
+  border-radius: 7px;
+  color: #65784b;
+  font-size: 10px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.site-download-link:hover {
+  background: #f0f2e9;
+  border-color: #cbd4c1;
+}
+.site-download-link:focus-visible {
+  outline: 2px solid #65784b;
+  outline-offset: 2px;
+}
 
 .ledger-totals {
   display: grid;
@@ -2904,6 +2925,11 @@ select:focus {
   .main-footer > span:last-child {
     font-size: 6px;
     letter-spacing: 1.1px;
+  }
+  .site-download-link {
+    gap: 3px;
+    padding: 6px 7px;
+    font-size: 9px;
   }
   .ledger-totals {
     gap: 15px;
