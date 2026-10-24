@@ -251,13 +251,17 @@ Deno.serve(async (req: Request) => {
         headers: { "Content-Type": "application/json", "x-goog-api-key": key },
         signal: AbortSignal.timeout(50000),
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: system }] },
+          // The expanded nullable draft schema is rejected by this model's
+          // constrained decoder. JSON mode plus the explicit contract preserves
+          // these fields; all candidates remain untrusted and reviewed on save.
+          systemInstruction: {
+            parts: [{ text: `${system}\n응답은 다음 JSON Schema를 만족하는 JSON 객체 하나만 반환한다. 설명이나 마크다운을 JSON 밖에 쓰지 않는다.\n${JSON.stringify(schema)}` }],
+          },
           contents: [...history, { role: "user", parts }],
           generationConfig: {
             temperature: 0.25,
-            maxOutputTokens: 5000,
+            maxOutputTokens: 4096,
             responseMimeType: "application/json",
-            responseJsonSchema: schema,
           },
         }),
       },
