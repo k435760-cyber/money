@@ -1,4 +1,5 @@
 import { copyFile, mkdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
 
 // Static hosts can serve the PKCE callback without an SPA rewrite service.
 await mkdir("dist/auth/callback", { recursive: true });
@@ -36,4 +37,34 @@ await mkdir("dist/privacy", { recursive: true });
 await writeFile(
   "dist/privacy/index.html",
   `<!doctype html><html lang="ko"><head>${head}</head><body class="privacy-page"><main class="privacy-page-shell"><a class="privacy-back-link" href="${escape(base)}">← 한푼으로 돌아가기</a>${document}</main></body></html>`,
+);
+
+// All chunks are cached on install, so lazy pages also open without a network.
+// Keep the worker scope relative to the built base (including /money/ previews).
+const { readdir } = await import("node:fs/promises");
+const assets = (await readdir("dist/assets"))
+  .sort()
+  .filter((name) => /\.(js|css)$/.test(name));
+const files = [
+  "index.html",
+  "offline.html",
+  "offline.css",
+  "favicon.svg",
+  "ai-icon.png",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/icon-maskable-512.png",
+  "icons/apple-touch-icon.png",
+  ...assets.map((name) => `assets/${name}`),
+];
+const revision = createHash("sha256")
+  .update(index + JSON.stringify(files))
+  .digest("hex")
+  .slice(0, 16);
+const template = await readFile("scripts/service-worker.template.js", "utf8");
+await writeFile(
+  "dist/sw.js",
+  template
+    .replace("__CACHE_NAME__", JSON.stringify(`hanpun-shell-${revision}`))
+    .replace("__PRECACHE_FILES__", JSON.stringify(files)),
 );

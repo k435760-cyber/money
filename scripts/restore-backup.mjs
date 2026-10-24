@@ -16,7 +16,7 @@ const snapshot = await decryptSnapshot(
 );
 if (
   snapshot.version !== 1 ||
-  snapshot.schema_version !== 2 ||
+  ![2, 3].includes(snapshot.schema_version) ||
   !Array.isArray(snapshot.entities) ||
   !Array.isArray(snapshot.accounts)
 )

@@ -38,6 +38,13 @@ import { DatePicker } from "./components/Pickers";
 import { AuthModal } from "./components/AuthModal";
 import { TransactionList } from "./components/Transactions";
 import { Dashboard } from "./pages/Dashboard";
+import { PwaControls } from "./components/PwaControls";
+
+const AgeModal = lazy(() =>
+  import("./components/AgeModal").then((module) => ({
+    default: module.AgeModal,
+  })),
+);
 
 const PrivacyPolicy = lazy(() =>
   import("./components/PrivacyPolicy").then((module) => ({
@@ -79,6 +86,7 @@ export default function App() {
   } | null>(null);
   const [planEditor, setPlanEditor] = useState<"budget" | "note" | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
+  const [ageOpen, setAgeOpen] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [day, setDay] = useState<string | null>(null);
   const [privacyOpen, setPrivacyOpen] = useState(false);
@@ -391,6 +399,20 @@ export default function App() {
               </div>
             </Suspense>
           )}
+          <div className="app-preferences">
+            <button
+              className="text-button"
+              disabled={!ledger.ready}
+              onClick={() => setAgeOpen(true)}
+            >
+              {ledger.ageGroup === "unknown"
+                ? "AI 연령대 확인"
+                : ledger.ageGroup === "under14"
+                  ? "일부 기능 제한 · AI 연령대 확인"
+                  : "AI 연령대 다시 확인"}
+            </button>
+            <PwaControls isDemo={isDemo} />
+          </div>
           <footer className="main-footer">
             <span>한푼씩, 나다운 일상.</span>
 
@@ -417,6 +439,8 @@ export default function App() {
             book={ledger.book}
             month={month}
             isDemo={isDemo}
+            ageGroup={ledger.ageGroup}
+            onAgeSettings={() => setAgeOpen(true)}
             onSave={(input) => saveEntry(input)}
             onBudget={() => setPlanEditor("budget")}
             onClose={() => setAssistantOpen(false)}
@@ -429,6 +453,8 @@ export default function App() {
           entry={editor.entry}
           date={editor.date}
           isDemo={isDemo}
+          ageGroup={ledger.ageGroup}
+          onAgeSettings={() => setAgeOpen(true)}
           onSave={saveEntry}
           onDelete={async (id) => {
             await ledger.deleteEntry(id);
@@ -441,6 +467,8 @@ export default function App() {
         <PlanForm
           plan={planFor(ledger.book, month)}
           mode={planEditor}
+          ageGroup={ledger.ageGroup}
+          onAgeSettings={() => setAgeOpen(true)}
           onSave={savePlan}
           onClose={() => setPlanEditor(null)}
         />
@@ -458,6 +486,24 @@ export default function App() {
             setPrivacyOpen(true);
           }}
         />
+      )}
+      {ageOpen && (
+        <Suspense
+          fallback={
+            <Modal
+              title="얼굴 사진으로 연령대 확인"
+              onClose={() => setAgeOpen(false)}
+            >
+              <p role="status">화면을 준비하고 있어요.</p>
+            </Modal>
+          }
+        >
+          <AgeModal
+            key={ledger.user?.id || "guest"}
+            onAssessed={ledger.refreshAgeGroup}
+            onClose={() => setAgeOpen(false)}
+          />
+        </Suspense>
       )}
       {day && (
         <Modal

@@ -1,6 +1,39 @@
 import { supabase } from "./supabase";
 import { validateEntry, validatePlan } from "./book";
 import type { Book, EntryInput, Plan, Transaction } from "./book";
+import {
+  AGE_STORAGE_KEY,
+  assertAgeAccess,
+  validAgeGroup,
+  AGE_RESTRICTION,
+} from "./age";
+import type { AgeGroup } from "./age";
+
+export async function loadAgeGroup(userId?: string): Promise<AgeGroup> {
+  if (!userId) {
+    const raw = localStorage.getItem(AGE_STORAGE_KEY);
+    try {
+      const value = raw ? JSON.parse(raw) : null;
+      return validAgeGroup(value?.age_group) &&
+        typeof value?.token === "string" &&
+        Date.parse(value.valid_until) > Date.now()
+        ? value.age_group
+        : "unknown";
+    } catch {
+      return "unknown";
+    }
+  }
+  const { data, error } = await supabase
+    .from("hanpun_age_profiles")
+    .select("age_group,valid_until")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  return validAgeGroup(data?.age_group) &&
+    Date.parse(data.valid_until) > Date.now()
+    ? data.age_group
+    : "unknown";
+}
 
 const DEMO_KEY = "hanpun-local-v2";
 import { removeLegacySamples } from "./legacy";
@@ -119,6 +152,7 @@ export async function saveEntry(
     id: id ?? crypto.randomUUID(),
   };
   validateEntry(entry);
+  assertAgeAccess(entry, await loadAgeGroup(userId));
   if (!userId) {
     const book = readDemo();
     book.transactions = id
@@ -166,6 +200,8 @@ export async function deleteEntry(id: string, userId?: string) {
 
 export async function savePlan(plan: Plan, userId?: string) {
   validatePlan(plan);
+  if (plan.budgets.insurance > 0 && (await loadAgeGroup(userId)) !== "14plus")
+    throw new Error(AGE_RESTRICTION);
   if (!userId) {
     const book = readDemo();
     book.plans = [
@@ -185,6 +221,8 @@ export async function savePlan(plan: Plan, userId?: string) {
 }
 
 export function friendlyError(error: unknown) {
+  if (isObject(error) && error.code === "42501")
+    return "저장 권한을 확인해주세요. 할부·보험 기능은 얼굴 사진의 연령대 판정이 필요해요.";
   if (
     error instanceof Error &&
     !/fetch|network|JWT|token|Postgrest|Auth/i.test(error.message)

@@ -12,6 +12,8 @@ import {
 import type { Book, EntryInput, Payment, Category } from "./book";
 import { payments, localDate } from "./book";
 import { supabase } from "./supabase";
+import type { AgeGroup } from "./age";
+import { AGE_STORAGE_KEY } from "./age";
 
 export type AiDraft = { input: EntryInput; issues: string[] };
 export type AiReply = { reply: string; drafts: AiDraft[]; warnings: string[] };
@@ -223,6 +225,7 @@ export async function askAssistant({
   month,
   history,
   signal,
+  ageGroup,
 }: {
   message: string;
   image: AiImage | null;
@@ -230,6 +233,7 @@ export async function askAssistant({
   month: string;
   history: AiMessage[];
   signal: AbortSignal;
+  ageGroup: AgeGroup;
 }): Promise<AiReply> {
   const { data: session } = await supabase.auth.getSession();
   const key =
@@ -250,6 +254,15 @@ export async function askAssistant({
       mode: image ? "receipt" : "chat",
       message,
       today: localDate(),
+      ageGroup,
+      ageToken: (() => {
+        try {
+          return JSON.parse(localStorage.getItem(AGE_STORAGE_KEY) || "null")
+            ?.token;
+        } catch {
+          return undefined;
+        }
+      })(),
       context: assistantContext(book, month),
       history: history.slice(-6),
       ...(image
@@ -265,6 +278,60 @@ export async function askAssistant({
         : "도우미에 연결하지 못했어요. 잠시 후 다시 시도해주세요.",
     );
   return parseAiReply(result);
+}
+
+export async function assessFaceAge(
+  image: AiImage,
+  signal: AbortSignal,
+): Promise<{ message: string }> {
+  const { data: session } = await supabase.auth.getSession();
+  const key =
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    "sb_publishable_Smg0o4U5qYTkrLygwhVUSA_YM7HwKjM";
+  const url =
+    import.meta.env.VITE_SUPABASE_URL ||
+    "https://dbneonomwrqwlbitwdtr.supabase.co";
+  const response = await fetch(`${url}/functions/v1/hanpun-ai`, {
+    method: "POST",
+    signal,
+    headers: {
+      "Content-Type": "application/json",
+      apikey: key,
+      Authorization: `Bearer ${session.session?.access_token || key}`,
+    },
+    body: JSON.stringify({
+      mode: "age",
+      today: localDate(),
+      message: "얼굴 사진 연령대 추정",
+      context: {},
+      faceConsent: true,
+      image: { data: image.data, mimeType: image.mimeType },
+    }),
+  });
+  const result = await response.json().catch(() => null);
+  if (
+    !response.ok ||
+    !result ||
+    !["under14", "14plus", "unknown"].includes(result.age_group) ||
+    typeof result.message !== "string" ||
+    !Number.isFinite(Date.parse(result.valid_until))
+  )
+    throw new Error(
+      result?.error || "연령대를 확인하지 못했어요. 잠시 후 다시 시도해주세요.",
+    );
+  if (!session.session) {
+    if (typeof result.token !== "string")
+      throw new Error("연령대 결과를 확인하지 못했어요.");
+    localStorage.setItem(
+      AGE_STORAGE_KEY,
+      JSON.stringify({
+        age_group: result.age_group,
+        valid_until: result.valid_until,
+        token: result.token,
+      }),
+    );
+  }
+  return { message: result.message };
 }
 
 export async function prepareAiImage(file: File): Promise<AiImage> {

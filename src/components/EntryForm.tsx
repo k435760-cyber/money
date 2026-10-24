@@ -17,12 +17,16 @@ import { friendlyError } from "../lib/repository";
 import { CategoryIcon } from "./Icons";
 import { ChoicePicker, DatePicker } from "./Pickers";
 import { Modal } from "./Modal";
+import { assertAgeAccess, AGE_RESTRICTION } from "../lib/age";
+import type { AgeGroup } from "../lib/age";
 
 export function EntryForm({
   entry,
   initialInput,
   date,
   isDemo,
+  ageGroup,
+  onAgeSettings,
   onSave,
   onDelete,
   onClose,
@@ -31,6 +35,8 @@ export function EntryForm({
   initialInput?: EntryInput;
   date?: string;
   isDemo: boolean;
+  ageGroup: AgeGroup;
+  onAgeSettings: () => void;
   onSave: (input: EntryInput, id?: string) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onClose: () => void;
@@ -68,12 +74,23 @@ export function EntryForm({
       installment_current: null,
     }));
   function chooseCategory(category: EntryInput["category"]) {
+    if (
+      ["insurance", "insurance_payout"].includes(category) &&
+      ageGroup !== "14plus"
+    ) {
+      if (ageGroup === "unknown") onAgeSettings();
+      return;
+    }
     if (["other", "extra"].includes(category)) {
       setOtherError("");
       setOtherEditor({ category, text: input.custom_category ?? "" });
     } else setInput((old) => ({ ...old, category, custom_category: "" }));
   }
   function setInstallment(enabled: boolean) {
+    if (enabled && ageGroup !== "14plus") {
+      if (ageGroup === "unknown") onAgeSettings();
+      return;
+    }
     setInput((old) =>
       enabled
         ? {
@@ -118,6 +135,7 @@ export function EntryForm({
     setError("");
     try {
       validateEntry(input);
+      assertAgeAccess(input, ageGroup);
       setBusy(true);
       await onSave(input, entry?.id);
       onClose();
@@ -225,6 +243,10 @@ export function EntryForm({
                 <button
                   type="button"
                   key={category}
+                  disabled={
+                    ageGroup === "under14" &&
+                    ["insurance", "insurance_payout"].includes(category)
+                  }
                   className={input.category === category ? "chosen" : ""}
                   aria-pressed={input.category === category}
                   onClick={() => chooseCategory(category)}
@@ -235,6 +257,22 @@ export function EntryForm({
               ))}
             </div>
           </fieldset>
+          {ageGroup !== "14plus" && (
+            <div className="age-notice">
+              <p>
+                {ageGroup === "under14"
+                  ? "만 14세 미만으로 추정되어 할부·보험 입력이 제한돼요. 기존 기록은 조회하거나 삭제할 수 있어요."
+                  : AGE_RESTRICTION}
+              </p>
+              <button
+                type="button"
+                className="text-button"
+                onClick={onAgeSettings}
+              >
+                AI 연령대 확인
+              </button>
+            </div>
+          )}
           {["other", "extra"].includes(input.category) && (
             <div className="custom-category-summary">
               <span>
@@ -265,6 +303,9 @@ export function EntryForm({
               <label className="installment-toggle">
                 <input
                   type="checkbox"
+                  disabled={
+                    ageGroup === "under14" && input.installment_months == null
+                  }
                   checked={input.installment_months != null}
                   onChange={(event) => setInstallment(event.target.checked)}
                 />

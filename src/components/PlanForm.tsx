@@ -14,15 +14,20 @@ import type { Plan } from "../lib/book";
 import { friendlyError } from "../lib/repository";
 import { CategoryIcon } from "./Icons";
 import { Modal } from "./Modal";
+import type { AgeGroup } from "../lib/age";
 
 export function PlanForm({
   plan,
   mode,
+  ageGroup,
+  onAgeSettings,
   onSave,
   onClose,
 }: {
   plan: Plan;
   mode: "budget" | "note";
+  ageGroup: AgeGroup;
+  onAgeSettings: () => void;
   onSave: (plan: Plan) => Promise<void>;
   onClose: () => void;
 }) {
@@ -75,6 +80,9 @@ export function PlanForm({
                       <input
                         aria-label={`${categories[category].label} 예산`}
                         inputMode="numeric"
+                        disabled={
+                          category === "insurance" && ageGroup !== "14plus"
+                        }
                         value={money(draft.budgets[category] ?? 0)}
                         onChange={(event) => {
                           const value = event.target.value.replaceAll(",", "");
@@ -116,6 +124,35 @@ export function PlanForm({
             </>
           )}
         </fieldset>
+        {ageGroup !== "14plus" && (
+          <div className="age-notice">
+            <p>
+              보험료 예산은 AI 연령대 확인 후 이용할 수 있어요. 만 14세
+              미만이거나 판정이 불확실하면 제한돼요.
+            </p>
+            <button
+              type="button"
+              className="text-button"
+              onClick={onAgeSettings}
+            >
+              AI 연령대 확인
+            </button>
+            {draft.budgets.insurance > 0 && (
+              <button
+                type="button"
+                className="text-button"
+                onClick={() =>
+                  setDraft((old) => ({
+                    ...old,
+                    budgets: { ...old.budgets, insurance: 0 },
+                  }))
+                }
+              >
+                기존 보험료 예산을 0원으로 바꾸기
+              </button>
+            )}
+          </div>
+        )}
         {error && (
           <p className="form-error" role="alert">
             {error}

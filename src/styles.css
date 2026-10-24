@@ -486,6 +486,30 @@ select {
   margin: 30px 0 20px;
   min-height: 33px;
 }
+.app-preferences, .pwa-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.app-preferences { margin-top: 30px; }
+.pwa-controls { justify-content: flex-end; }
+.pwa-status { display: flex; align-items: center; gap: 7px; color: #65794e; font-size: 11px; line-height: 1.7; }
+.pwa-status svg { flex-shrink: 0; }
+.age-form { display: grid; gap: 18px; }
+.age-photo-preview { width: 100%; max-height: 220px; object-fit: contain; border-radius: 10px; background: #f1f3e9; }
+.age-upload { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; padding: 18px; border: 1px dashed #a8b097; border-radius: 10px; font-size: 13px; color: #4b5d3e; }
+.age-upload input { width: 100%; max-width: 240px; font-size: 11px; }
+.age-consent { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; line-height: 1.8; }
+.age-consent input[type="checkbox"] { width: 16px; height: 16px; min-height: 0; padding: 0; flex: 0 0 16px; margin-top: 4px; accent-color: #4b5d3e; }
+.age-consent span { min-width: 0; }
+.age-modal .modal-header > div { min-width: 0; }
+.age-modal .modal-header h2 { word-break: keep-all; overflow-wrap: anywhere; }
+.age-result { font-size: 13px; line-height: 1.9; padding: 16px; border-radius: 10px; background: #edf0e4; color: #4b5d3e; }
+.age-notice { padding: 12px 14px; border-radius: 8px; background: #f1f3e9; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.age-notice p { font-size: 11px; line-height: 1.8; margin: 0; flex: 1 1 190px; }
+.category-options button:disabled, .budget-inputs input:disabled { opacity: .45; cursor: not-allowed; }
 .month-navigation {
   display: flex;
   align-items: center;

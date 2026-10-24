@@ -3,6 +3,7 @@ import type { User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 import * as repository from "../lib/repository";
 import type { Book, EntryInput, Plan } from "../lib/book";
+import type { AgeGroup } from "../lib/age";
 
 const emptyBook: Book = { transactions: [], plans: [] };
 
@@ -12,9 +13,11 @@ export function useLedger() {
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
   const owner = user?.id ?? "demo";
-  const [loaded, setLoaded] = useState<{ owner: string; book: Book } | null>(
-    null,
-  );
+  const [loaded, setLoaded] = useState<{
+    owner: string;
+    book: Book;
+    ageGroup: AgeGroup;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -69,11 +72,13 @@ export function useLedger() {
     let alive = true;
     setLoading(true);
     setLoaded(null);
-    repository
-      .loadBook(user?.id)
-      .then((book) => {
+    Promise.all([
+      repository.loadBook(user?.id),
+      repository.loadAgeGroup(user?.id),
+    ])
+      .then(([book, ageGroup]) => {
         if (alive) {
-          setLoaded({ owner, book });
+          setLoaded({ owner, book, ageGroup });
           setLoading(false);
         }
       })
@@ -94,12 +99,20 @@ export function useLedger() {
   const updateBook = (transform: (book: Book) => Book) =>
     setLoaded((previous) =>
       previous?.owner === owner
-        ? { owner, book: transform(previous.book) }
+        ? { ...previous, book: transform(previous.book) }
         : previous,
     );
 
   return {
     user,
+    ageGroup:
+      loaded?.owner === owner ? loaded.ageGroup : ("unknown" as AgeGroup),
+    async refreshAgeGroup() {
+      const ageGroup = await repository.loadAgeGroup(user?.id);
+      setLoaded((previous) =>
+        previous?.owner === owner ? { ...previous, ageGroup } : previous,
+      );
+    },
     book,
     ready,
     loading: !authReady || loading,

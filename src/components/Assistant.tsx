@@ -20,12 +20,15 @@ import {
 import type { AiDraft, AiImage, AiMessage, AiReply } from "../lib/assistant";
 import { Modal } from "./Modal";
 import { EntryForm } from "./EntryForm";
+import type { AgeGroup } from "../lib/age";
 
 const icon = `${import.meta.env.BASE_URL}ai-icon.png`;
 export function Assistant({
   book,
   month,
   isDemo,
+  ageGroup,
+  onAgeSettings,
   onSave,
   onBudget,
   onClose,
@@ -33,6 +36,8 @@ export function Assistant({
   book: Book;
   month: string;
   isDemo: boolean;
+  ageGroup: AgeGroup;
+  onAgeSettings: () => void;
   onSave: (input: EntryInput) => Promise<void>;
   onBudget: () => void;
   onClose: () => void;
@@ -92,6 +97,7 @@ export function Assistant({
         month,
         history,
         signal: abort.signal,
+        ageGroup,
       });
       setResult((old) => ({
         ...reply,
@@ -357,6 +363,8 @@ export function Assistant({
       </Modal>
       {review && (
         <EntryForm
+          ageGroup={ageGroup}
+          onAgeSettings={onAgeSettings}
           initialInput={review.input}
           isDemo={isDemo}
           onSave={async (input) => {
