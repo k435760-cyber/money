@@ -17,6 +17,7 @@ const escape = (value) =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 const base = index.match(/href="([^"]*)assets\/[^\"]+\.css"/)?.[1] || "/";
+await writeFile("dist/offline.html", (await readFile("public/offline.html", "utf8")).replaceAll("__HANPUN_BASE__", base));
 const renderBlock = (block, title) => {
   if (block.type === "paragraph") return `<p>${escape(block.text)}</p>`;
   if (block.type === "list")
@@ -58,10 +59,9 @@ const files = [
   ...assets.map((name) => `assets/${name}`),
 ];
 const template = await readFile("scripts/service-worker.template.js", "utf8");
-const revision = createHash("sha256")
-  .update(index + JSON.stringify(files) + template)
-  .digest("hex")
-  .slice(0, 16);
+const hasher = createHash("sha256").update(index + JSON.stringify(files) + template);
+for (const file of files) hasher.update(await readFile(`dist/${file}`));
+const revision = hasher.digest("hex").slice(0, 16);
 await writeFile(
   "dist/sw.js",
   template
