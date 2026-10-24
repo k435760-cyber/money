@@ -5,6 +5,7 @@ import {
   categories,
   expenseCategories,
   incomeCategories,
+  installmentAmount,
   localDate,
   MAX_AMOUNT,
   money,
@@ -46,6 +47,11 @@ export function EntryForm({
         memo: "",
       },
   );
+  const [otherEditor, setOtherEditor] = useState<{
+    category: EntryInput["category"];
+    text: string;
+  } | null>(null);
+  const [otherError, setOtherError] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -56,7 +62,57 @@ export function EntryForm({
       ...old,
       kind,
       category: kind === "expense" ? "food" : "salary",
+      custom_category: "",
+      installment_total: null,
+      installment_months: null,
+      installment_current: null,
     }));
+  function chooseCategory(category: EntryInput["category"]) {
+    if (["other", "extra"].includes(category)) {
+      setOtherError("");
+      setOtherEditor({ category, text: input.custom_category ?? "" });
+    } else setInput((old) => ({ ...old, category, custom_category: "" }));
+  }
+  function setInstallment(enabled: boolean) {
+    setInput((old) =>
+      enabled
+        ? {
+            ...old,
+            installment_total: old.amount,
+            installment_months: 3,
+            installment_current: 1,
+            amount: installmentAmount(old.amount, 3, 1),
+          }
+        : {
+            ...old,
+            amount: old.installment_total ?? old.amount,
+            installment_total: null,
+            installment_months: null,
+            installment_current: null,
+          },
+    );
+  }
+  function changeInstallment(
+    field: "installment_total" | "installment_months" | "installment_current",
+    value: number,
+  ) {
+    setInput((old) => {
+      const next = { ...old, [field]: value };
+      if (field === "installment_months")
+        next.installment_current = Math.min(
+          next.installment_current ?? 1,
+          value || 1,
+        );
+      return {
+        ...next,
+        amount: installmentAmount(
+          next.installment_total ?? 0,
+          next.installment_months ?? 0,
+          next.installment_current ?? 0,
+        ),
+      };
+    });
+  }
   async function submit(event: FormEvent) {
     event.preventDefault();
     setError("");
@@ -116,7 +172,7 @@ export function EntryForm({
             </button>
           </div>
           <label className="form-label amount-field">
-            금액
+            {input.installment_months != null ? "이번 회차 금액" : "금액"}
             <div>
               <span>₩</span>
               <input
@@ -171,7 +227,7 @@ export function EntryForm({
                   key={category}
                   className={input.category === category ? "chosen" : ""}
                   aria-pressed={input.category === category}
-                  onClick={() => update("category", category)}
+                  onClick={() => chooseCategory(category)}
                 >
                   <CategoryIcon category={category} size={18} />
                   {categories[category].label}
@@ -179,6 +235,20 @@ export function EntryForm({
               ))}
             </div>
           </fieldset>
+          {["other", "extra"].includes(input.category) && (
+            <div className="custom-category-summary">
+              <span>
+                기타 분류 · {input.custom_category || "이름을 입력해주세요"}
+              </span>
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => chooseCategory(input.category)}
+              >
+                분류 이름 수정
+              </button>
+            </div>
+          )}
           <div className="form-label">
             <span>결제 수단</span>
             <ChoicePicker
@@ -190,6 +260,81 @@ export function EntryForm({
               }
             />
           </div>
+          {input.kind === "expense" && (
+            <div className="installment-fields">
+              <label className="installment-toggle">
+                <input
+                  type="checkbox"
+                  checked={input.installment_months != null}
+                  onChange={(event) => setInstallment(event.target.checked)}
+                />
+                할부로 기록하기
+              </label>
+              {input.installment_months != null && (
+                <>
+                  <label className="form-label">
+                    총 할부금액
+                    <input
+                      aria-label="총 할부금액"
+                      inputMode="numeric"
+                      value={
+                        input.installment_total
+                          ? money(input.installment_total)
+                          : ""
+                      }
+                      placeholder="0"
+                      onChange={(event) => {
+                        const value = event.target.value.replaceAll(",", "");
+                        if (/^\d*$/.test(value) && Number(value) <= MAX_AMOUNT)
+                          changeInstallment("installment_total", Number(value));
+                      }}
+                    />
+                  </label>
+                  <div className="form-two">
+                    <label className="form-label">
+                      할부 개월
+                      <input
+                        aria-label="할부 개월"
+                        inputMode="numeric"
+                        value={input.installment_months || ""}
+                        onChange={(event) => {
+                          if (/^\d{0,2}$/.test(event.target.value))
+                            changeInstallment(
+                              "installment_months",
+                              Number(event.target.value),
+                            );
+                        }}
+                      />
+                    </label>
+                    <label className="form-label">
+                      이번 회차
+                      <input
+                        aria-label="이번 회차"
+                        inputMode="numeric"
+                        value={input.installment_current || ""}
+                        onChange={(event) => {
+                          if (/^\d{0,2}$/.test(event.target.value))
+                            changeInstallment(
+                              "installment_current",
+                              Number(event.target.value),
+                            );
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <p className="form-hint">
+                    할부 정보를 바꾸면 균등 분할 금액을 계산해요. 나머지 금액은
+                    마지막 회차에 더하며, 이번 회차 금액은 실제 납부액으로
+                    수정할 수 있어요.
+                  </p>
+                  <p className="form-hint">
+                    이번 회차만 지출에 반영해요. 미래 회차는 자동으로 기록하지
+                    않아요.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
           <label className="form-label">
             메모 <span className="optional">선택</span>
             <textarea
@@ -253,6 +398,62 @@ export function EntryForm({
           </div>
         )}
       </form>
+      {otherEditor && (
+        <Modal
+          title="기타 분류 입력"
+          description="어떤 수입이나 지출인지 이름을 붙여주세요."
+          onClose={() => setOtherEditor(null)}
+        >
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              const text = otherEditor.text.trim();
+              if (!text || text.length > 40) {
+                setOtherError("분류 이름을 1~40자로 입력해주세요.");
+                return;
+              }
+              setInput((old) => ({
+                ...old,
+                category: otherEditor.category,
+                custom_category: text,
+              }));
+              setOtherEditor(null);
+            }}
+          >
+            <label className="form-label">
+              분류 이름
+              <input
+                aria-label="기타 분류 이름"
+                autoFocus
+                maxLength={40}
+                value={otherEditor.text}
+                placeholder="예: 경조사, 반려동물, 환급금"
+                onChange={(event) =>
+                  setOtherEditor({ ...otherEditor, text: event.target.value })
+                }
+              />
+            </label>
+            {otherError && (
+              <p className="form-error" role="alert">
+                {otherError}
+              </p>
+            )}
+            <div className="form-actions">
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => setOtherEditor(null)}
+              >
+                취소
+              </button>
+              <button type="submit" className="button primary">
+                적용
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </Modal>
   );
 }

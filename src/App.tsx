@@ -8,7 +8,6 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleHelp,
-  Download,
   Leaf,
   LoaderCircle,
   LogIn,
@@ -395,16 +394,7 @@ export default function App() {
           )}
           <footer className="main-footer">
             <span>한푼씩, 나다운 일상.</span>
-            <a
-              className="site-download-link"
-              href="https://github.com/k435760-cyber/money/archive/refs/heads/main.zip"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="한푼 사이트 전체 파일 ZIP 다운로드"
-            >
-              <Download size={13} />
-              사이트 전체 ZIP 받기
-            </a>
+
             <button
               className="footer-privacy-link"
               onClick={() => setPrivacyOpen(true)}

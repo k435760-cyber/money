@@ -22,7 +22,7 @@ const renderBlock = (block, title) => {
     return `<ol>${block.items.map((item) => `<li>${escape(item)}</li>`).join("")}</ol>`;
   return `<div class="privacy-table-wrap${block.headers.length === 3 ? " privacy-table-wide" : ""}"${block.headers.length === 3 ? ' tabindex="0"' : ""} role="region" aria-label="${escape(title)} 표"><table><thead><tr>${block.headers.map((header) => `<th scope="col">${escape(header)}</th>`).join("")}</tr></thead><tbody>${block.rows.map((row) => `<tr>${row.map((cell) => `<td>${escape(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 };
-const document = `<article class="privacy-document"><header class="privacy-heading"><h1>${escape(policy.title)}</h1><p>${escape(policy.byline)}</p></header><p>${escape(policy.introduction)}</p>${policy.sections.map((section, index) => `<section aria-labelledby="policy-article-${index + 1}"><h2 id="policy-article-${index + 1}">${escape(section.title)}</h2>${section.blocks.map((block) => renderBlock(block, section.title)).join("")}</section>`).join("")}<section class="privacy-source-notes" aria-labelledby="policy-source-notes"><h2 id="policy-source-notes">${escape(policy.notes.title)}</h2><ul>${policy.notes.items.map((item) => `<li>${escape(item)}</li>`).join("")}</ul></section><nav class="privacy-document-links" aria-label="개인정보 처리방침 문서"><a href="${escape(base)}privacy-policy.pdf" download="한푼 개인정보 처리방침.pdf">원본 PDF 다운로드</a></nav></article>`;
+const document = `<article class="privacy-document"><header class="privacy-heading"><h1>${escape(policy.title)}</h1><p>${escape(policy.byline)}</p></header><p>${escape(policy.introduction)}</p>${policy.sections.map((section, index) => `<section aria-labelledby="policy-article-${index + 1}"><h2 id="policy-article-${index + 1}">${escape(section.title)}</h2>${section.blocks.map((block) => renderBlock(block, section.title)).join("")}</section>`).join("")}<section class="privacy-source-notes" aria-labelledby="policy-source-notes"><h2 id="policy-source-notes">${escape(policy.notes.title)}</h2><ul>${policy.notes.items.map((item) => `<li>${escape(item)}</li>`).join("")}</ul></section><nav class="privacy-document-links" aria-label="개인정보 처리방침 문서"><a href="${escape(base)}privacy-policy.pdf" download="한푼 개인정보 처리방침.pdf">처리방침 PDF 다운로드</a></nav></article>`;
 const head = index
   .match(/<head>([\s\S]*?)<\/head>/)[1]
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, "")
@@ -30,7 +30,7 @@ const head = index
   .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(policy.title)}</title>`)
   .replace(
     /(<meta\s+name="description"\s+content=")[^"]*("\s*\/?>)/,
-    `$1한푼 개인정보 처리방침 전문과 원본 PDF.$2`,
+    `$1한푼 개인정보 처리방침 전문과 PDF.$2`,
   );
 await mkdir("dist/privacy", { recursive: true });
 await writeFile(

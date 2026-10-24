@@ -1,6 +1,8 @@
 import {
   categories,
   expenseCategories,
+  incomeCategories,
+  MAX_INSTALLMENT_MONTHS,
   MAX_AMOUNT,
   monthTransactions,
   planFor,
@@ -74,7 +76,7 @@ export function parseAiReply(value: unknown): AiReply {
     const kind = raw.kind === "income" ? "income" : "expense";
     const category =
       typeof raw.category === "string" &&
-      (kind === "income" ? ["salary", "extra"] : expenseCategories).includes(
+      (kind === "income" ? incomeCategories : expenseCategories).includes(
         raw.category as Category,
       )
         ? (raw.category as Category)
@@ -86,6 +88,52 @@ export function parseAiReply(value: unknown): AiReply {
       : "체크카드";
     if (!payments.includes(raw.payment as Payment))
       issues.push("결제 수단을 확인해주세요.");
+    const custom =
+      ["other", "extra"].includes(category) &&
+      typeof raw.custom_category === "string"
+        ? raw.custom_category.trim().slice(0, 40)
+        : "";
+    if (["other", "extra"].includes(category) && !custom)
+      issues.push("기타 분류 이름을 입력해주세요.");
+    let installment_total: number | null = null,
+      installment_months: number | null = null,
+      installment_current: number | null = null;
+    if (
+      [
+        raw.installment_total,
+        raw.installment_months,
+        raw.installment_current,
+      ].some((value) => value != null)
+    ) {
+      const [total, months, current] = [
+        raw.installment_total,
+        raw.installment_months,
+        raw.installment_current,
+      ];
+      if (
+        kind === "expense" &&
+        typeof total === "number" &&
+        Number.isSafeInteger(total) &&
+        total > 0 &&
+        total <= MAX_AMOUNT &&
+        typeof months === "number" &&
+        Number.isInteger(months) &&
+        months >= 2 &&
+        months <= MAX_INSTALLMENT_MONTHS &&
+        total >= months &&
+        typeof current === "number" &&
+        Number.isInteger(current) &&
+        current >= 1 &&
+        current <= months
+      ) {
+        installment_total = total;
+        installment_months = months;
+        installment_current = current;
+      } else
+        issues.push(
+          "할부 정보를 확인해주세요. 불명확한 할부 정보는 적용하지 않았어요.",
+        );
+    }
     drafts.push({
       input: {
         date,
@@ -94,6 +142,10 @@ export function parseAiReply(value: unknown): AiReply {
         kind,
         category,
         payment,
+        custom_category: custom,
+        installment_total,
+        installment_months,
+        installment_current,
         memo: typeof raw.memo === "string" ? raw.memo.slice(0, 500) : "",
       },
       issues: [...new Set(issues)],
@@ -127,13 +179,29 @@ export function assistantContext(book: Book, month: string) {
     recent: [...rows]
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 30)
-      .map(({ date, title, amount, kind, category }) => ({
-        date,
-        title,
-        amount,
-        kind,
-        category,
-      })),
+      .map(
+        ({
+          date,
+          title,
+          amount,
+          kind,
+          category,
+          custom_category,
+          installment_total,
+          installment_months,
+          installment_current,
+        }) => ({
+          date,
+          title,
+          amount,
+          kind,
+          category,
+          custom_category,
+          installment_total,
+          installment_months,
+          installment_current,
+        }),
+      ),
   };
 }
 

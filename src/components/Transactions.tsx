@@ -1,5 +1,5 @@
 import { ArrowUpRight, Pencil } from "lucide-react";
-import { categories, money } from "../lib/book";
+import { categoryLabel, money } from "../lib/book";
 import type { Transaction } from "../lib/book";
 import { CategoryIcon } from "./Icons";
 
@@ -33,9 +33,16 @@ export function TransactionList({
                   <i />{" "}
                 </>
               )}
-              {categories[entry.category].label}
+              {categoryLabel(entry)}
               <i />
               {entry.payment}
+              {entry.installment_months && (
+                <>
+                  {" "}
+                  · 할부 {entry.installment_current}/{entry.installment_months}
+                  회
+                </>
+              )}
             </span>
           </span>
           <span
@@ -98,16 +105,37 @@ export function TransactionTable({
                   </span>
                   <span>
                     {entry.title}
-                    {entry.memo && <small>{entry.memo}</small>}
+                    {(entry.memo ||
+                      entry.custom_category ||
+                      entry.installment_months) && (
+                      <small>
+                        {[
+                          entry.custom_category,
+                          entry.installment_months
+                            ? `할부 ${entry.installment_current}/${entry.installment_months}회`
+                            : "",
+                          entry.memo,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </small>
+                    )}
                   </span>
                 </button>
               </td>
               <td className="category-cell">
-                <span className="category-tag">
-                  {categories[entry.category].label}
-                </span>
+                <span className="category-tag">{categoryLabel(entry)}</span>
               </td>
-              <td className="payment-cell">{entry.payment}</td>
+              <td className="payment-cell">
+                {entry.payment}
+                {entry.installment_months && (
+                  <small>
+                    {" "}
+                    · 할부 {entry.installment_current}/
+                    {entry.installment_months}회
+                  </small>
+                )}
+              </td>
               <td
                 className={`amount-cell ${entry.kind === "income" ? "text-green" : ""}`}
               >

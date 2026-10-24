@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import {
   categories,
+  categoryLabel,
   exportCsv,
   money,
   monthTransactions,
@@ -46,7 +47,7 @@ export function Ledger({
         (category === "all" || entry.category === category) &&
         (payment === "all" || entry.payment === payment) &&
         (!search ||
-          `${entry.title} ${entry.memo} ${categories[entry.category].label}`
+          `${entry.title} ${entry.memo} ${categoryLabel(entry)}`
             .toLowerCase()
             .includes(search)),
     ),

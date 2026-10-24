@@ -8,6 +8,7 @@ import {
   HeartPulse,
   House,
   ShoppingBag,
+  ShieldCheck,
   Utensils,
 } from "lucide-react";
 import type { Category } from "../lib/book";
@@ -21,6 +22,8 @@ const icons = {
   culture: Clapperboard,
   health: HeartPulse,
   other: Ellipsis,
+  insurance: ShieldCheck,
+  insurance_payout: ShieldCheck,
   salary: BriefcaseBusiness,
   extra: Coins,
 };

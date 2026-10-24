@@ -1112,27 +1112,6 @@ select {
   font-size: 7px;
   letter-spacing: 1.8px;
 }
-.site-download-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 7px 9px;
-  border: 1px solid #dfe4d8;
-  border-radius: 7px;
-  color: #65784b;
-  font-size: 10px;
-  white-space: nowrap;
-  transition: background 0.15s, border-color 0.15s;
-}
-.site-download-link:hover {
-  background: #f0f2e9;
-  border-color: #cbd4c1;
-}
-.site-download-link:focus-visible {
-  outline: 2px solid #65784b;
-  outline-offset: 2px;
-}
 
 .ledger-totals {
   display: grid;
@@ -2926,11 +2905,6 @@ select:focus {
     font-size: 6px;
     letter-spacing: 1.1px;
   }
-  .site-download-link {
-    gap: 3px;
-    padding: 6px 7px;
-    font-size: 9px;
-  }
   .ledger-totals {
     gap: 15px;
     padding: 21px 18px;
@@ -3580,4 +3554,19 @@ select:focus {
   .privacy-table-wrap th, .privacy-table-wrap td { padding: 9px; }
   .privacy-page-shell { padding: 22px 18px; margin: 16px auto; }
   .footer-privacy-link { font-size: 9px; }
+}
+
+.installment-fields { display: grid; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: #f7f8f2; }
+.installment-toggle { display: flex; align-items: center; gap: 9px; font-size: 12px; color: var(--green); }
+.installment-toggle input[type="checkbox"] { width: 16px; height: 16px; min-height: 0; margin: 0; accent-color: var(--green); }
+.installment-fields .form-hint { margin: 0; }
+.custom-category-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; color: var(--green); font-size: 11px; padding: 10px; border-radius: 6px; background: #f1f4e9; overflow-wrap: anywhere; }
+.category-insurance, .category-insurance_payout { background: #edf3e9; color: #6b9186; }
+@media print {
+  .privacy-page { background: white; }
+  .privacy-page-shell { width: 100%; margin: 0; padding: 0; border: 0; }
+  .privacy-back-link, .privacy-document-links { display: none; }
+  .privacy-document h2 { break-after: avoid; }
+  .privacy-table-wrap tr { break-inside: avoid; }
+  .privacy-document p, .privacy-document li { widows: 2; orphans: 2; }
 }

@@ -1,4 +1,4 @@
-import { defaultPlan, expenseCategories, shiftMonth } from "./book";
+import { defaultPlan, shiftMonth } from "./book";
 import type { Book, Transaction, Category, Kind, Payment } from "./book";
 const legacyBudgets = {
   food: 450000,
@@ -83,7 +83,18 @@ function legacySamples(month: string, today: number): Book {
           ? "salary"
           : day === 2
             ? "living"
-            : expenseCategories[day % 8],
+            : (
+                [
+                  "food",
+                  "cafe",
+                  "shopping",
+                  "transport",
+                  "living",
+                  "culture",
+                  "health",
+                  "other",
+                ] as Category[]
+              )[day % 8],
       payment: "체크카드",
       memo: "",
     });

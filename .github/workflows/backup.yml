@@ -1,0 +1,45 @@
+name: Encrypted ledger backup
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/backup.yml"
+      - "scripts/server-backup.mjs"
+      - "supabase/functions/hanpun-backup/**"
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: hanpun-server-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Export encrypted snapshot using short-lived verified identity
+        run: node scripts/server-backup.mjs export
+      - name: Store encrypted recovery point outside Supabase
+        id: artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hanpun-encrypted-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .backup-output/hanpun-ledger-backup.json
+          retention-days: 7
+          include-hidden-files: true
+          compression-level: 0
+          if-no-files-found: error
+      - name: Confirm offsite upload
+        env:
+          BACKUP_ARTIFACT_ID: ${{ steps.artifact.outputs.artifact-id }}
+          BACKUP_ARTIFACT_DIGEST: ${{ steps.artifact.outputs.artifact-digest }}
+        run: node scripts/server-backup.mjs ack

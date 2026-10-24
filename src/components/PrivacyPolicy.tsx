@@ -88,7 +88,7 @@ export function PrivacyPolicy() {
           href={`${import.meta.env.BASE_URL}privacy-policy.pdf`}
           download="한푼 개인정보 처리방침.pdf"
         >
-          원본 PDF 다운로드
+          처리방침 PDF 다운로드
         </a>
         <a href={`${import.meta.env.BASE_URL}privacy/`}>전체 페이지로 보기</a>
       </nav>

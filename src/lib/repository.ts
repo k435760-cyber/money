@@ -24,7 +24,10 @@ export function parseBook(value: unknown): Book {
       typeof entry.date !== "string"
     )
       throw new Error("저장된 기록의 형식이 올바르지 않아요.");
-    validateEntry(entry as Transaction, { allowFuture: true });
+    validateEntry(entry as Transaction, {
+      allowFuture: true,
+      allowLegacyOther: true,
+    });
   }
   for (const plan of value.plans) {
     if (
@@ -34,6 +37,7 @@ export function parseBook(value: unknown): Book {
       !isObject(plan.budgets)
     )
       throw new Error("저장된 예산의 형식이 올바르지 않아요.");
+    (plan as Plan).budgets.insurance ??= 0;
     validatePlan(plan as Plan);
   }
   return value as Book;
@@ -67,7 +71,9 @@ export async function loadBook(userId?: string): Promise<Book> {
   for (let offset = 0; ; offset += 1000) {
     const { data, error } = await supabase
       .from("hanpun_transactions")
-      .select("id,date,title,amount,kind,category,payment,memo")
+      .select(
+        "id,date,title,amount,kind,category,payment,memo,custom_category,installment_total,installment_months,installment_current",
+      )
       .eq("user_id", userId)
       .order("date", { ascending: false })
       .order("id", { ascending: false })
@@ -104,6 +110,12 @@ export async function saveEntry(
     ...input,
     title: input.title.trim(),
     memo: input.memo.trim(),
+    custom_category: ["other", "extra"].includes(input.category)
+      ? (input.custom_category ?? "").trim()
+      : "",
+    installment_total: input.installment_total ?? null,
+    installment_months: input.installment_months ?? null,
+    installment_current: input.installment_current ?? null,
     id: id ?? crypto.randomUUID(),
   };
   validateEntry(entry);
@@ -124,7 +136,9 @@ export async function saveEntry(
         .eq("user_id", userId)
     : supabase.from("hanpun_transactions").insert(row);
   const { data, error } = await query
-    .select("id,date,title,amount,kind,category,payment,memo")
+    .select(
+      "id,date,title,amount,kind,category,payment,memo,custom_category,installment_total,installment_months,installment_current",
+    )
     .single();
   if (error) throw error;
   return data as Transaction;

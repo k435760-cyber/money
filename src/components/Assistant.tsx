@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import type { ChangeEvent, FormEvent } from "react";
 import type { Book, EntryInput } from "../lib/book";
-import { categories, money, monthLabel } from "../lib/book";
+import { categoryLabel, money, monthLabel } from "../lib/book";
 import {
   askAssistant,
   isDuplicateDraft,
@@ -290,8 +290,7 @@ export function Assistant({
                         </span>
                       </div>
                       <p>
-                        {draft.input.date} ·{" "}
-                        {categories[draft.input.category].label} ·{" "}
+                        {draft.input.date} · {categoryLabel(draft.input)} ·{" "}
                         {draft.input.kind === "income" ? "수입" : "지출"}
                       </p>
                       {draft.issues.map((issue, i) => (

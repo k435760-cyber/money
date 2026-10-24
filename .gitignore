@@ -147,3 +147,7 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Backup payloads and private recovery material must never enter source control.
+.backup-output/
+*recovery-key*.pem
