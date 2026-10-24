@@ -57,11 +57,11 @@ const files = [
   "icons/apple-touch-icon.png",
   ...assets.map((name) => `assets/${name}`),
 ];
+const template = await readFile("scripts/service-worker.template.js", "utf8");
 const revision = createHash("sha256")
-  .update(index + JSON.stringify(files))
+  .update(index + JSON.stringify(files) + template)
   .digest("hex")
   .slice(0, 16);
-const template = await readFile("scripts/service-worker.template.js", "utf8");
 await writeFile(
   "dist/sw.js",
   template

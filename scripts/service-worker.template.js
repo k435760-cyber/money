@@ -8,7 +8,19 @@ const paths = new Set(
 );
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(FILES)));
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await cache.addAll(FILES);
+    // Cloudflare canonicalizes /index.html to / and /offline.html to /offline.
+    // Navigation requests cannot consume a cached redirected response. Store
+    // an ordinary same-origin response while retaining its security headers.
+    for (const file of FILES) {
+      const response = await cache.match(file);
+      if (response?.redirected) await cache.put(file, new Response(response.body, {
+        status: response.status, statusText: response.statusText, headers: response.headers,
+      }));
+    }
+  })());
 });
 self.addEventListener("activate", (event) => {
   event.waitUntil(

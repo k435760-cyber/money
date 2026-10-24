@@ -1,6 +1,6 @@
 // Only public application files are cached. Auth, API responses and personal
 // ledger data never enter Cache Storage. Guest data stays in its existing store.
-const CACHE = "hanpun-shell-f205b40f93a58fba";
+const CACHE = "hanpun-shell-c72cb2744b2d2542";
 const FILES = ["index.html","offline.html","offline.css","favicon.svg","ai-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","icons/apple-touch-icon.png","assets/AgeModal-59972aku.js","assets/Assistant-CFdUxgBf.js","assets/Budget-DIJx9myU.js","assets/Calendar-BS-pytVj.js","assets/Ledger-CSy9RaiK.js","assets/Modal-CwB4xJM6.js","assets/PrivacyPolicy-eorSnZyD.js","assets/assistant-DbOdZt7m.js","assets/book-CsNzRyzp.js","assets/index-CuVHv1r9.css","assets/index-DibFGbgL.js","assets/jsx-runtime-IzPD2q5l.js"];
 const ROOT = new URL("./", self.location.href).pathname;
 const paths = new Set(
@@ -8,7 +8,19 @@ const paths = new Set(
 );
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(FILES)));
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await cache.addAll(FILES);
+    // Cloudflare canonicalizes /index.html to / and /offline.html to /offline.
+    // Navigation requests cannot consume a cached redirected response. Store
+    // an ordinary same-origin response while retaining its security headers.
+    for (const file of FILES) {
+      const response = await cache.match(file);
+      if (response?.redirected) await cache.put(file, new Response(response.body, {
+        status: response.status, statusText: response.statusText, headers: response.headers,
+      }));
+    }
+  })());
 });
 self.addEventListener("activate", (event) => {
   event.waitUntil(
