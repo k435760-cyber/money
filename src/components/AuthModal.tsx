@@ -131,7 +131,7 @@ export function AuthModal({
           <p className="auth-policy">
             로그인하면{" "}
             <button className="inline-link" onClick={onPrivacy}>
-              개인정보 처리 안내
+              개인정보 처리방침
             </button>
             에 동의하게 됩니다.
           </p>

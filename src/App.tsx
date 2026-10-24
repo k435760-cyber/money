@@ -40,6 +40,12 @@ import { AuthModal } from "./components/AuthModal";
 import { TransactionList } from "./components/Transactions";
 import { Dashboard } from "./pages/Dashboard";
 
+const PrivacyPolicy = lazy(() =>
+  import("./components/PrivacyPolicy").then((module) => ({
+    default: module.PrivacyPolicy,
+  })),
+);
+
 const Assistant = lazy(() =>
   import("./components/Assistant").then((module) => ({
     default: module.Assistant,
@@ -205,7 +211,7 @@ export default function App() {
             <ChevronRight size={15} />
           </button>
           <button className="privacy-link" onClick={() => setPrivacyOpen(true)}>
-            개인정보 처리 안내
+            개인정보 처리방침
           </button>
         </div>
       </aside>
@@ -399,6 +405,12 @@ export default function App() {
               <Download size={13} />
               사이트 전체 ZIP 받기
             </a>
+            <button
+              className="footer-privacy-link"
+              onClick={() => setPrivacyOpen(true)}
+            >
+              개인정보 처리방침
+            </button>
             <span>MADE FOR YOUR EVERYDAY</span>
           </footer>
         </main>
@@ -507,47 +519,14 @@ export default function App() {
         </Modal>
       )}
       {privacyOpen && (
-        <Modal title="개인정보 처리 안내" onClose={() => setPrivacyOpen(false)}>
-          <div className="prose-content">
-            <p>한푼은 나만의 가계부를 기록하기 위한 서비스예요.</p>
-            <h3>어떤 정보를 보관하나요?</h3>
-            <p>
-              Google 로그인 시 이름, 이메일, 프로필 정보를 Supabase Auth에서
-              처리해요. 입력한 수입·지출, 예산, 메모는 선택한 Supabase
-              프로젝트에 계정별로 보관해요.
-            </p>
-            <h3>누가 기록을 볼 수 있나요?</h3>
-            <p>
-              가계부 데이터는 본인 계정에서만 조회·수정하도록 접근 규칙을
-              적용했어요. 별도의 광고나 방문 분석 도구는 사용하지 않아요.
-            </p>
-            <h3>브라우저에는 무엇이 남나요?</h3>
-            <p>
-              로그인 세션과 이 기기의 기록을 브라우저 저장 공간에 보관해요. 이
-              기기의 기록은 계정으로 자동 전송되지 않으며, 브라우저 데이터를
-              지우면 사라질 수 있어요.
-            </p>
-            <h3>소비 도우미와 사진 분석</h3>
-            <p>
-              도우미를 실행하면 질문, 선택한 달의 가계부 요약과 최근 기록의
-              날짜·내용·금액, 첨부한 이미지를 Google Gemini에 보내 분석해요.
-              계정 이메일과 기록 메모는 요약에 포함하지 않아요. 사진과 대화는
-              한푼 서버에 저장하지 않으며, 분석된 기록은 본인이 확인하고 저장한
-              뒤 가계부에 반영돼요. 이용량 관리에는 계정 식별자 또는 복원할 수
-              없는 IP 해시와 요청 횟수를 최대 3일 보관해요.
-            </p>
-            <h3>보관과 삭제</h3>
-            <p>
-              입력한 기록과 메모는 가계부에서 직접 수정·삭제할 수 있어요. Google
-              인증 계정이 삭제되면 연결된 가계부 데이터도 함께 삭제돼요. 공용
-              기기에서는 사용 후 로그아웃해주세요.
-            </p>
-            <p className="muted">
-              인증 제공: Google · 데이터 및 인증 보관: Supabase
-              <br />
-              시행일: 2026년 10월 23일
-            </p>
-          </div>
+        <Modal
+          title="개인정보 처리방침"
+          className="privacy-modal"
+          onClose={() => setPrivacyOpen(false)}
+        >
+          <Suspense fallback={<p role="status">처리방침을 불러오고 있어요.</p>}>
+            <PrivacyPolicy />
+          </Suspense>
         </Modal>
       )}
       {helpOpen && (
