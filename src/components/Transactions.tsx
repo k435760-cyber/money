@@ -1,4 +1,4 @@
-import { ArrowUpRight, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { categoryLabel, money } from "../lib/book";
 import type { Transaction } from "../lib/book";
 import { CategoryIcon } from "./Icons";
@@ -52,7 +52,10 @@ export function TransactionList({
             {money(entry.amount)}
             <small>원</small>
           </span>
-          <ArrowUpRight size={15} className="row-arrow" aria-hidden="true" />
+          <span className="transaction-edit" aria-hidden="true">
+            <Pencil size={12} />
+            수정
+          </span>
         </button>
       ))}
     </div>
@@ -83,7 +86,7 @@ export function TransactionTable({
               금액
             </th>
             <th scope="col">
-              <span className="sr-only">수정</span>
+              수정
             </th>
           </tr>
         </thead>
@@ -149,7 +152,7 @@ export function TransactionTable({
                   aria-label={`${entry.title} 수정`}
                   onClick={() => onEdit(entry)}
                 >
-                  <Pencil size={15} />
+                  <span aria-hidden="true">수정</span>
                 </button>
               </td>
             </tr>

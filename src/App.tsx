@@ -309,8 +309,7 @@ export default function App() {
             <span className="month-toolbar-note">
               {isDemo ? (
                 <>
-                  <span className="tiny-dot" />이 기기의 기록은 이 브라우저에
-                  저장돼요.
+                  <span className="tiny-dot" />이 브라우저에 저장돼요.
                 </>
               ) : (
                 <>

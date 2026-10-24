@@ -479,6 +479,8 @@ select {
 }
 .month-toolbar {
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   align-items: center;
   justify-content: space-between;
   margin: 30px 0 20px;
@@ -527,6 +529,9 @@ select {
 .month-toolbar-note {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  white-space: nowrap;
   gap: 5px;
   color: #a0a58f;
   font-size: 10px;
@@ -942,15 +947,14 @@ select {
   color: #949c85;
   margin-left: 3px;
 }
-.row-arrow {
-  opacity: 0;
-  color: #8f9b7d;
-  margin-left: 0;
-  transition: opacity 0.15s;
-}
-.transaction-row:hover .row-arrow,
-.transaction-row:focus-visible .row-arrow {
-  opacity: 1;
+.transaction-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  color: #65794e;
+  font-size: 10px;
+  white-space: nowrap;
 }
 .overview-side {
   display: flex;
@@ -1335,8 +1339,13 @@ select {
   font-weight: 400;
 }
 .row-edit {
-  width: 25px;
-  color: #b2baa3;
+  width: 38px;
+  min-height: 36px;
+  border: 1px solid #e1e5d9;
+  border-radius: 6px;
+  color: #65794e;
+  font-size: 10px;
+  white-space: nowrap;
 }
 .ledger-table tr:hover .row-edit {
   color: #657f4a;
@@ -2428,9 +2437,6 @@ select:focus {
   .transaction-amount {
     font-size: 14px;
   }
-  .row-arrow {
-    display: none;
-  }
   .summary-details > div > span {
     font-size: 9px;
   }
@@ -2686,7 +2692,7 @@ select:focus {
   }
   .month-toolbar-note {
     font-size: 8px;
-    max-width: 130px;
+    max-width: none;
     text-align: right;
     line-height: 1.7;
   }
@@ -2816,7 +2822,7 @@ select:focus {
   .transaction-amount {
     font-size: 15px;
   }
-  .row-arrow {
+  .transaction-edit svg {
     display: none;
   }
   .overview-side {
@@ -3010,15 +3016,11 @@ select:focus {
   }
   .ledger-table th:last-child,
   .ledger-table td:last-child {
-    width: 20px;
+    width: 34px;
     padding: 0 0 0 4px;
   }
   .row-edit {
-    width: 21px;
-    height: 25px;
-  }
-  .row-edit svg {
-    width: 13px;
+    width: 34px;
   }
   .pagination {
     font-size: 9px;
