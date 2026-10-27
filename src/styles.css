@@ -867,6 +867,21 @@ select {
   display: flex;
   flex-direction: column;
 }
+.recurring-panel { grid-column: 1 / -1; padding: 24px 28px; }
+.recurring-panel h2 { display: flex; align-items: center; gap: 8px; }
+.recurring-list { list-style: none; padding: 0; margin: 0; }
+.recurring-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 15px 0; border-bottom: 1px solid #eceee3; }
+.recurring-list li:last-child { border-bottom: 0; }
+.recurring-info { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.recurring-info strong { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recurring-info span { font-size: 10px; color: #859173; line-height: 1.7; }
+.recurring-action { flex-shrink: 0; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.recurring-action > span { font-size: 16px; color: #4b5d3e; white-space: nowrap; }
+.recurring-action small { font-size: 10px; margin-left: 4px; color: #859173; }
+.recurring-action .text-button { font-size: 10px; min-height: 30px; }
+.recurring-empty, .recurring-footnote { font-size: 11px; line-height: 1.9; color: #859173; }
+.recurring-footnote { border-top: 1px solid #eceee3; padding-top: 12px; margin-top: 12px; font-size: 10px; }
+@media (max-width: 600px) { .recurring-panel { padding: 20px; } }
 .transaction-row {
   display: flex;
   align-items: center;

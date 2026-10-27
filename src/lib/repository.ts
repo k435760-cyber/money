@@ -98,6 +98,12 @@ function writeDemo(book: Book) {
 
 export async function loadBook(userId?: string): Promise<Book> {
   if (!userId) return readDemo();
+  const { data: active, error: sessionError } = await supabase.rpc(
+    "hanpun_session_active",
+  );
+  if (sessionError) throw sessionError;
+  if (active !== true)
+    throw new Error("로그인이 종료되었어요. 다시 로그인해주세요.");
   const transactions: Transaction[] = [];
   const plans: Plan[] = [];
   // Supabase caps each response at 1,000 rows. Read every page before calculating totals.
@@ -222,7 +228,7 @@ export async function savePlan(plan: Plan, userId?: string) {
 
 export function friendlyError(error: unknown) {
   if (isObject(error) && error.code === "42501")
-    return "저장 권한을 확인해주세요. 할부·보험 기능은 얼굴 사진의 연령대 판정이 필요해요.";
+    return "권한 또는 로그인 상태가 변경되었어요. 새로고침한 뒤 다시 시도해주세요.";
   if (
     error instanceof Error &&
     !/fetch|network|JWT|token|Postgrest|Auth/i.test(error.message)

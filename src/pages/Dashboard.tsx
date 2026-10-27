@@ -25,6 +25,8 @@ import type { Book, Transaction } from "../lib/book";
 import { CategoryChart, SpendingChart } from "../components/Charts";
 import { Sprout } from "../components/Icons";
 import { TransactionList } from "../components/Transactions";
+import { RecurringReminders } from "../components/RecurringReminders";
+import type { EntryInput } from "../lib/book";
 
 export function Dashboard({
   book,
@@ -34,6 +36,7 @@ export function Dashboard({
   onLedger,
   onBudget,
   onNote,
+  onRecurring,
 }: {
   book: Book;
   month: string;
@@ -42,6 +45,7 @@ export function Dashboard({
   onLedger: () => void;
   onBudget: () => void;
   onNote: () => void;
+  onRecurring: (input: EntryInput) => void;
 }) {
   const entries = monthTransactions(book.transactions, month);
   const previous = monthTransactions(book.transactions, shiftMonth(month, -1));
@@ -188,6 +192,12 @@ export function Dashboard({
         </div>
       </section>
 
+      {month === currentMonth() && (
+        <RecurringReminders
+          entries={book.transactions}
+          onRecord={onRecurring}
+        />
+      )}
       <section className="panel recent-panel">
         <div className="panel-heading">
           <div>

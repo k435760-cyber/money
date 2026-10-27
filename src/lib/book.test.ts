@@ -124,6 +124,14 @@ describe("monthly budgets", () => {
 });
 
 describe("CSV export", () => {
+  it("neutralizes formula prefixes concealed behind whitespace or zero-width characters", () => {
+    for (const prefix of [" ", "\t", "\r", "\n", "\u200B", "\uFEFF", " \t"]) {
+      const csv = exportCsv([
+        { ...entry, id: "csv-security", memo: `${prefix}=1+1` },
+      ]);
+      expect(csv).toContain(`"'${prefix}=1+1"`);
+    }
+  });
   it("preserves Korean text, quotes, newlines, and spreadsheet compatibility", () => {
     const csv = exportCsv([
       {

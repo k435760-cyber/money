@@ -1,7 +1,7 @@
 // Only public application files are cached. Auth, API responses and personal
 // ledger data never enter Cache Storage. Guest data stays in its existing store.
-const CACHE = "hanpun-shell-fe64f164954e039b";
-const FILES = ["index.html","offline.html","offline.css","favicon.svg","ai-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","icons/apple-touch-icon.png","assets/AgeModal-59972aku.js","assets/Assistant-CFdUxgBf.js","assets/Budget-DIJx9myU.js","assets/Calendar-BS-pytVj.js","assets/Ledger-CSy9RaiK.js","assets/Modal-CwB4xJM6.js","assets/PrivacyPolicy-eorSnZyD.js","assets/assistant-DbOdZt7m.js","assets/book-CsNzRyzp.js","assets/index-CuVHv1r9.css","assets/index-DibFGbgL.js","assets/jsx-runtime-IzPD2q5l.js"];
+const CACHE = "hanpun-shell-6d2a849ff41baab4";
+const FILES = ["index.html","offline.html","offline.css","favicon.svg","ai-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","icons/apple-touch-icon.png","assets/AgeModal-7J03O9c0.js","assets/Assistant-DpQ33aFF.js","assets/Budget-CHBZjg0M.js","assets/Calendar-DBnaud4S.js","assets/Ledger-Bw4Qwgb0.js","assets/Modal-Bn8N0Dj7.js","assets/PrivacyPolicy-eorSnZyD.js","assets/assistant-C6yDRq_t.js","assets/book-B_aJ0-Dy.js","assets/index-BZVhgLhI.js","assets/index-DOWF1AJt.css","assets/jsx-runtime-IzPD2q5l.js"];
 const ROOT = new URL("./", self.location.href).pathname;
 const paths = new Set(
   FILES.map((file) => new URL(file, self.location.href).pathname),

@@ -1,5 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import {
+  readBoundedJson,
+  RequestError,
+  verifiedSessionId,
+} from "./request-security.mjs";
+import {
   evaluateAgeEstimate,
   readAgeToken,
   signAgeToken,
@@ -102,6 +107,7 @@ Deno.serve(async (req: Request) => {
     /^https:\/\/[a-z0-9-]+\.moneymanger\.pages\.dev$/.test(origin);
   const headers = {
     "Content-Type": "application/json",
+    "X-Content-Type-Options": "nosniff",
     "Cache-Control": "no-store",
     Vary: "Origin",
     ...(allowed ? { "Access-Control-Allow-Origin": origin } : {}),
@@ -123,14 +129,28 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST")
     return respond(405, { error: "지원하지 않는 요청이에요." });
   try {
-    if (Number(req.headers.get("content-length") || 0) > 4_000_000)
-      return respond(413, {
-        error: "이미지가 너무 커요. 작은 이미지로 다시 골라주세요.",
+    const url = Deno.env.get("SUPABASE_URL")!;
+    const service =
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
+      JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}").default;
+    const publishable = JSON.parse(
+      Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") || "{}",
+    ).default;
+    const legacyAnon = Deno.env.get("SUPABASE_ANON_KEY");
+    // A public key identifies guests; valid user tokens are checked with Auth, never decoded blindly.
+    const apiKey = req.headers.get("apikey");
+    if (
+      !apiKey ||
+      ![
+        publishable,
+        legacyAnon,
+        "sb_publishable_Smg0o4U5qYTkrLygwhVUSA_YM7HwKjM",
+      ].includes(apiKey)
+    )
+      return respond(401, {
+        error: "사이트를 새로고침한 뒤 다시 시도해주세요.",
       });
-    const raw = await req.text();
-    if (raw.length > 4_000_000)
-      return respond(413, { error: "이미지가 너무 커요." });
-    const body = JSON.parse(raw);
+    const body = await readBoundedJson(req);
     if (
       !body ||
       !["chat", "receipt", "age"].includes(body.mode) ||
@@ -165,27 +185,6 @@ Deno.serve(async (req: Request) => {
       return respond(400, {
         error: "얼굴 사진 분석 안내를 읽고 동의해주세요.",
       });
-    const url = Deno.env.get("SUPABASE_URL")!;
-    const service =
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
-      JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}").default;
-    const publishable = JSON.parse(
-      Deno.env.get("SUPABASE_PUBLISHABLE_KEYS") || "{}",
-    ).default;
-    const legacyAnon = Deno.env.get("SUPABASE_ANON_KEY");
-    // A public key identifies guests; valid user tokens are checked with Auth, never decoded blindly.
-    const apiKey = req.headers.get("apikey");
-    if (
-      !apiKey ||
-      ![
-        publishable,
-        legacyAnon,
-        "sb_publishable_Smg0o4U5qYTkrLygwhVUSA_YM7HwKjM",
-      ].includes(apiKey)
-    )
-      return respond(401, {
-        error: "사이트를 새로고침한 뒤 다시 시도해주세요.",
-      });
     const admin = createClient(url, service, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
@@ -202,6 +201,23 @@ Deno.serve(async (req: Request) => {
       if (error || !data.user)
         return respond(401, {
           error: "로그인이 만료됐어요. 다시 로그인해주세요.",
+        });
+      const sessionId = verifiedSessionId(token);
+      if (!sessionId)
+        return respond(401, {
+          error: "로그인 정보를 확인해주세요. 다시 로그인해주세요.",
+        });
+      const { data: activeSession, error: sessionError } = await admin.rpc(
+        "hanpun_ai_session_active",
+        { p_user_id: data.user.id, p_session_id: sessionId },
+      );
+      if (sessionError)
+        return respond(503, {
+          error: "로그인 상태를 확인하지 못했어요. 잠시 후 다시 시도해주세요.",
+        });
+      if (activeSession !== true)
+        return respond(401, {
+          error: "종료된 로그인이에요. 다시 로그인해주세요.",
         });
       actor = `user:${data.user.id}`;
       const { data: age, error: ageError } = await admin
@@ -346,18 +362,16 @@ Deno.serve(async (req: Request) => {
       const group = evaluateAgeEstimate(parsed);
       const validUntil = new Date(Date.now() + 30 * 86400000).toISOString();
       if (actor.startsWith("user:")) {
-        const { error } = await admin
-          .from("hanpun_age_profiles")
-          .upsert(
-            {
-              user_id: actor.slice(5),
-              age_group: group,
-              assessed_at: new Date().toISOString(),
-              valid_until: validUntil,
-              consent_version: "face-age-v1",
-            },
-            { onConflict: "user_id" },
-          );
+        const { error } = await admin.from("hanpun_age_profiles").upsert(
+          {
+            user_id: actor.slice(5),
+            age_group: group,
+            assessed_at: new Date().toISOString(),
+            valid_until: validUntil,
+            consent_version: "face-age-v1",
+          },
+          { onConflict: "user_id" },
+        );
         if (error)
           return respond(503, {
             error:
@@ -407,6 +421,8 @@ Deno.serve(async (req: Request) => {
       model: MODEL,
     });
   } catch (error) {
+    if (error instanceof RequestError)
+      return respond(error.status, { error: error.message });
     return respond(error instanceof SyntaxError ? 400 : 502, {
       error:
         error instanceof SyntaxError

@@ -231,7 +231,7 @@ export function installmentAmount(
 }
 
 const csvCell = (value: string) =>
-  `"${(/^[=+\-@\t\r]/.test(value) ? "'" : "") + value.replaceAll('"', '""')}"`;
+  `"${(/^[\s\u200B-\u200D\uFEFF]*[=+\-@]|^[\t\r\n]/u.test(value) ? "'" : "") + value.replaceAll('"', '""')}"`;
 export function exportCsv(transactions: Transaction[]) {
   const rows = [
     [

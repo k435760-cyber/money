@@ -83,6 +83,7 @@ export default function App() {
   const [editor, setEditor] = useState<{
     entry?: Transaction;
     date?: string;
+    initialInput?: EntryInput;
   } | null>(null);
   const [planEditor, setPlanEditor] = useState<"budget" | "note" | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
@@ -376,6 +377,7 @@ export default function App() {
                     onLedger={() => setView("ledger")}
                     onBudget={() => setView("budget")}
                     onNote={() => setPlanEditor("note")}
+                    onRecurring={(initialInput) => setEditor({ initialInput })}
                   />
                 )}
                 {view === "ledger" && (
@@ -451,6 +453,7 @@ export default function App() {
         <EntryForm
           key={editor.entry?.id || editor.date}
           entry={editor.entry}
+          initialInput={editor.initialInput}
           date={editor.date}
           isDemo={isDemo}
           ageGroup={ledger.ageGroup}
