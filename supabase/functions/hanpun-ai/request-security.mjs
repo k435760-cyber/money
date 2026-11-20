@@ -69,3 +69,16 @@ export function verifiedSessionId(token) {
     return null;
   }
 }
+
+// Guest quotas key on the address Supabase's Cloudflare edge observed. That
+// edge overwrites cf-connecting-ip; the leftmost x-forwarded-for entry is
+// whatever the client sent, so it is never used. Unknown callers share one
+// bucket, which fails closed.
+export function clientIp(headers) {
+  for (const name of ["cf-connecting-ip", "x-real-ip"]) {
+    const value = headers.get(name)?.trim();
+    if (value && value.length <= 64 && /^[0-9a-fA-F.:]+$/.test(value))
+      return value.toLowerCase();
+  }
+  return "unknown";
+}

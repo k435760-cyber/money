@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import {
+  clientIp,
   readBoundedJson,
   RequestError,
   verifiedSessionId,
@@ -236,8 +237,7 @@ Deno.serve(async (req: Request) => {
       limit = 50;
     } else {
       // Guests share an IP-based daily quota; the global DB quota also bounds anonymous abuse.
-      const ip =
-        req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+      const ip = clientIp(req.headers);
       const hash = await crypto.subtle.digest(
         "SHA-256",
         new TextEncoder().encode(`${service}:${ip}`),

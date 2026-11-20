@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  clientIp,
   readBoundedJson,
   verifiedSessionId,
 } from "../supabase/functions/hanpun-ai/request-security.mjs";
@@ -65,5 +66,14 @@ describe("bounded untrusted AI request bodies", () => {
     expect(verifiedSessionId(jwt({ session_id: sid }))).toBe(sid);
     expect(verifiedSessionId(jwt({ session_id: "not-uuid" }))).toBeNull();
     expect(verifiedSessionId("broken")).toBeNull();
+  });
+  it("keys guests on the edge-observed address, never client-sent forwarding", () => {
+    const h = (values) => new Headers(values);
+    expect(
+      clientIp(h({ "cf-connecting-ip": "203.0.113.7", "x-forwarded-for": "1.2.3.4" })),
+    ).toBe("203.0.113.7");
+    expect(clientIp(h({ "x-real-ip": "2001:DB8::1" }))).toBe("2001:db8::1");
+    expect(clientIp(h({ "x-forwarded-for": "1.2.3.4" }))).toBe("unknown");
+    expect(clientIp(h({ "cf-connecting-ip": "evil,1.2.3.4" }))).toBe("unknown");
   });
 });
